@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">recipick</string>
+    <string name="main_title">My Recipes</string>
 </resources>
