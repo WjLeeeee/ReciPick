@@ -59,7 +59,7 @@ fun AppScreen(onClick: () -> Unit) {
 @Composable
 fun MainPreview() {
     RecipickTheme {
-        AppScreen()
+        AppScreen(onClick = {})
     }
 }
 
