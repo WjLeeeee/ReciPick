@@ -1,4 +1,4 @@
-package com.woojin.recipick
+package com.woojin.recipick.presentation.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.woojin.recipick.ui.theme
+package com.woojin.recipick.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.woojin.recipick
+package com.woojin.recipick.application
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
