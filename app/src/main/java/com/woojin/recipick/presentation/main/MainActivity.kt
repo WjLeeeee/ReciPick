@@ -25,7 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
+import com.woojin.recipick.presentation.Screen
 import com.woojin.recipick.presentation.theme.RecipickTheme
 import com.woojin.recipick.presentation.theme.mainColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,18 +45,44 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecipickTheme {
-                LaunchedEffect(Unit) {
+                val navController = rememberNavController()
+                LaunchedEffect(key1 = Unit) {
                     viewModel.addRecipeClick.collect {
-                        onAddButtonClick()
+                        navController.navigate(Screen.AddRecipeTitle.route)
                     }
                 }
-                AppScreen(onClick = { viewModel.onAddRecipeClick() })
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Main.route
+                ) {
+                    composable(Screen.Main.route) {
+                        AppScreen(onClick = { viewModel.onAddRecipeClick() })
+                    }
+
+                    composable(Screen.AddRecipeTitle.route) {
+                        AddRecipeTitleScreen(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
+                        Text("ㅋㅋ 안녕")
+                    }
+
+                    composable(Screen.AddRecipeIngredients.route) {
+                        AddRecipeIngredientsScreen(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
+                    }
+
+                    composable(Screen.AddRecipeSteps.route) {
+                        AddRecipeStepsScreen(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
+                    }
+                }
             }
         }
-    }
-
-    private fun onAddButtonClick() {
-        Toast.makeText(this, "레시피 추가", Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -107,4 +138,19 @@ fun FloatingButton(onClick: () -> Unit) {
     ) {
         Icon(Icons.Filled.Add, "레시피 추가 버튼")
     }
+}
+
+@Composable
+fun AddRecipeTitleScreen(navController: NavHostController, viewModel: MainViewModel) {
+    Text("여기는 제목")
+}
+
+@Composable
+fun AddRecipeIngredientsScreen(navController: NavHostController, viewModel: MainViewModel) {
+    Text("여기는 재료 추가")
+}
+
+@Composable
+fun AddRecipeStepsScreen(navController: NavHostController, viewModel: MainViewModel) {
+    Text("여기는 조리 과정 설명")
 }
