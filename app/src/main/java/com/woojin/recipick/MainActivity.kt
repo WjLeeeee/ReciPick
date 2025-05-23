@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.woojin.recipick.ui.theme.RecipickTheme
 import com.woojin.recipick.ui.theme.mainColor
 
@@ -40,13 +42,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppScreen() {
     val context = LocalContext.current
+    val addItemClick = {
+        Toast.makeText(context, "레시피 추가", Toast.LENGTH_SHORT).show()
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { MyTopAppBar() },
+        topBar = { MyTopAppBar(addItemClick) },
         floatingActionButton = {
-            FloatingButton(onClick = {
-                Toast.makeText(context, "레시피 추가", Toast.LENGTH_SHORT).show()
-            })
+            FloatingButton(addItemClick)
         }
     ) { innerPadding ->
         MainScreen(modifier = Modifier.padding(innerPadding))
@@ -63,11 +66,11 @@ fun MainPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar() {
+fun MyTopAppBar(onClick: () -> Unit) {
     CenterAlignedTopAppBar(
         title = { Text(stringResource(R.string.main_title)) },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "검색")
             }
         },
@@ -79,6 +82,9 @@ fun MyTopAppBar() {
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Text("여기는 메인 화면")
+    }
 }
 
 @Composable
