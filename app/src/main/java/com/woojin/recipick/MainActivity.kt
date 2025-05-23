@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,23 +32,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecipickTheme {
-                AppScreen()
+                AppScreen(onClick = { onAddButtonClick() })
             }
+        }
+    }
+
+    private fun onAddButtonClick() {
+        val addItemClick = {
+            Toast.makeText(this, "레시피 추가", Toast.LENGTH_SHORT).show()
         }
     }
 }
 
 @Composable
-fun AppScreen() {
-    val context = LocalContext.current
-    val addItemClick = {
-        Toast.makeText(context, "레시피 추가", Toast.LENGTH_SHORT).show()
-    }
+fun AppScreen(onClick: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { MyTopAppBar(addItemClick) },
+        topBar = { MyTopAppBar(onClick) },
         floatingActionButton = {
-            FloatingButton(addItemClick)
+            FloatingButton(onClick)
         }
     ) { innerPadding ->
         MainScreen(modifier = Modifier.padding(innerPadding))
