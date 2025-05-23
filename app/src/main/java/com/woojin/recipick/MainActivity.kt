@@ -1,6 +1,7 @@
 package com.woojin.recipick
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.woojin.recipick.ui.theme.RecipickTheme
@@ -28,15 +31,33 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecipickTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = { MyTopAppBar() }
-                ) { innerPadding ->
-                    MainScreen(modifier = Modifier.padding(innerPadding))
-                    MyTopAppBar()
-                }
+                AppScreen()
             }
         }
+    }
+}
+
+@Composable
+fun AppScreen() {
+    val context = LocalContext.current
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = { MyTopAppBar() },
+        floatingActionButton = {
+            FloatingButton(onClick = {
+                Toast.makeText(context, "레시피 추가", Toast.LENGTH_SHORT).show()
+            })
+        }
+    ) { innerPadding ->
+        MainScreen(modifier = Modifier.padding(innerPadding))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainPreview() {
+    RecipickTheme {
+        AppScreen()
     }
 }
 
@@ -56,15 +77,16 @@ fun MyTopAppBar() {
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun AppBarPreview() {
-    RecipickTheme {
-        MyTopAppBar()
-    }
+fun MainScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MainScreen(modifier: Modifier) {
-
+fun FloatingButton(onClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = { onClick() },
+        containerColor = mainColor
+    ) {
+        Icon(Icons.Filled.Add, "레시피 추가 버튼")
+    }
 }
