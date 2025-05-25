@@ -1,7 +1,6 @@
 package com.woojin.recipick.presentation.main
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -64,7 +64,6 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             viewModel = viewModel
                         )
-                        Text("ㅋㅋ 안녕")
                     }
 
                     composable(Screen.AddRecipeIngredients.route) {
@@ -141,16 +140,73 @@ fun FloatingButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun AddRecipeTitleScreen(navController: NavHostController, viewModel: MainViewModel) {
-    Text("여기는 제목")
+fun AddRecipeTitleScreen(
+    navController: NavHostController,
+    viewModel: MainViewModel
+) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            Text("여기는 레시피 제목 화면")
+            Button(
+                onClick = {
+                    navController.navigate(Screen.AddRecipeIngredients.route)
+                }
+            ) {
+                Text("다음")
+            }
+        }
+    }
 }
 
 @Composable
 fun AddRecipeIngredientsScreen(navController: NavHostController, viewModel: MainViewModel) {
-    Text("여기는 재료 추가")
+    Scaffold { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            Text("여기는 재료 추가 화면")
+            Button(
+                onClick = {
+                    navController.navigate(Screen.AddRecipeSteps.route)
+                }
+            ) {
+                Text("다음")
+            }
+        }
+    }
 }
 
 @Composable
 fun AddRecipeStepsScreen(navController: NavHostController, viewModel: MainViewModel) {
-    Text("여기는 조리 과정 설명")
+    Scaffold { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            Text("여기는 조리 과정 설명")
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo(Screen.Main.route) { //메인 화면 까지 스택 제거
+                            inclusive = true //메인 화면 자체도 스택 제거
+                        }
+                    }
+                }
+            ) {
+                Text("완료")
+            }
+        }
+    }
 }

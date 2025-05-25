@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private val _addRecipeClick = MutableSharedFlow<Unit>()
     val addRecipeClick: SharedFlow<Unit> = _addRecipeClick.asSharedFlow()
 
-    var recipeInputState by mutableStateOf(RecipeInputState())
+    private var recipeInputState by mutableStateOf(RecipeInputState())
         private set
 
     fun onAddRecipeClick() {
