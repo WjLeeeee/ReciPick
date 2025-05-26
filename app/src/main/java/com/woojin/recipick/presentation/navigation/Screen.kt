@@ -1,4 +1,4 @@
-package com.woojin.recipick.presentation
+package com.woojin.recipick.presentation.navigation
 
 sealed class Screen(val route: String) {
     object Main: Screen("main_screen")

@@ -29,7 +29,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
-import com.woojin.recipick.presentation.Screen
+import com.woojin.recipick.presentation.add_recipe.AddRecipeIngredientsScreen
+import com.woojin.recipick.presentation.add_recipe.AddRecipeStepsScreen
+import com.woojin.recipick.presentation.add_recipe.AddRecipeTitleScreen
+import com.woojin.recipick.presentation.navigation.Screen
 import com.woojin.recipick.presentation.theme.RecipickTheme
 import com.woojin.recipick.presentation.theme.mainColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -87,125 +90,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun AppScreen(onClick: () -> Unit) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { MyTopAppBar(onClick) },
-        floatingActionButton = {
-            FloatingButton(onClick)
-        }
-    ) { innerPadding ->
-        MainScreen(modifier = Modifier.padding(innerPadding))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    RecipickTheme {
-        AppScreen(onClick = {})
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTopAppBar(onClick: () -> Unit) {
-    CenterAlignedTopAppBar(
-        title = { Text(stringResource(R.string.main_title)) },
-        actions = {
-            IconButton(onClick) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "검색")
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = mainColor
-        )
-    )
-}
-
-@Composable
-fun MainScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(16.dp)) {
-        Text("여기는 메인 화면")
-    }
-}
-
-@Composable
-fun FloatingButton(onClick: () -> Unit) {
-    FloatingActionButton(
-        onClick = { onClick() },
-        containerColor = mainColor
-    ) {
-        Icon(Icons.Filled.Add, "레시피 추가 버튼")
-    }
-}
-
-@Composable
-fun AddRecipeTitleScreen(
-    onClick: () -> Unit
-) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-        ) {
-            Text("여기는 레시피 제목 화면")
-            Button(
-                onClick = { onClick() }
-            ) {
-                Text("다음")
-            }
-        }
-    }
-}
-
-@Composable
-fun AddRecipeIngredientsScreen(
-    onClick: () -> Unit
-) {
-    Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-        ) {
-            Text("여기는 재료 추가 화면")
-            Button(
-                onClick = { onClick() }
-            ) {
-                Text("다음")
-            }
-        }
-    }
-}
-
-@Composable
-fun AddRecipeStepsScreen(
-    onClick: () -> Unit
-) {
-    Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-        ) {
-            Text("여기는 조리 과정 설명")
-            Button(
-                onClick = { onClick() }
-            ) {
-                Text("완료")
             }
         }
     }
