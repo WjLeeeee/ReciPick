@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,8 +46,17 @@ class MainActivity : ComponentActivity() {
             RecipickTheme {
                 val navController = rememberNavController()
                 LaunchedEffect(key1 = Unit) {
-                    viewModel.addRecipeClick.collect {
-                        navController.navigate(Screen.AddRecipeTitle.route)
+                    viewModel.navigateToScreen.collect { navigation ->
+                        when (navigation) {
+                            Screen.AddRecipeTitle -> navController.navigate(Screen.AddRecipeTitle.route)
+                            Screen.AddRecipeIngredients -> navController.navigate(Screen.AddRecipeIngredients.route)
+                            Screen.AddRecipeSteps -> navController.navigate(Screen.AddRecipeSteps.route)
+                            Screen.Main -> navController.navigate(Screen.Main.route) {
+                                popUpTo(Screen.Main.route) { //메인 화면 까지 스택 제거
+                                    inclusive = true //메인 화면 자체도 스택 제거
+                                }
+                            }
+                        }
                     }
                 }
                 NavHost(
@@ -56,27 +64,26 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.Main.route
                 ) {
                     composable(Screen.Main.route) {
-                        AppScreen(onClick = { viewModel.onAddRecipeClick() })
+                        AppScreen(
+                            onClick = { viewModel.navUpdate(Screen.AddRecipeTitle) }
+                        )
                     }
 
                     composable(Screen.AddRecipeTitle.route) {
                         AddRecipeTitleScreen(
-                            navController = navController,
-                            viewModel = viewModel
+                            onClick = { viewModel.navUpdate(Screen.AddRecipeIngredients) }
                         )
                     }
 
                     composable(Screen.AddRecipeIngredients.route) {
                         AddRecipeIngredientsScreen(
-                            navController = navController,
-                            viewModel = viewModel
+                            onClick = { viewModel.navUpdate(Screen.AddRecipeSteps) }
                         )
                     }
 
                     composable(Screen.AddRecipeSteps.route) {
                         AddRecipeStepsScreen(
-                            navController = navController,
-                            viewModel = viewModel
+                            onClick = { viewModel.navUpdate(Screen.Main) }
                         )
                     }
                 }
@@ -141,8 +148,7 @@ fun FloatingButton(onClick: () -> Unit) {
 
 @Composable
 fun AddRecipeTitleScreen(
-    navController: NavHostController,
-    viewModel: MainViewModel
+    onClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -155,9 +161,7 @@ fun AddRecipeTitleScreen(
         ) {
             Text("여기는 레시피 제목 화면")
             Button(
-                onClick = {
-                    navController.navigate(Screen.AddRecipeIngredients.route)
-                }
+                onClick = { onClick() }
             ) {
                 Text("다음")
             }
@@ -166,7 +170,9 @@ fun AddRecipeTitleScreen(
 }
 
 @Composable
-fun AddRecipeIngredientsScreen(navController: NavHostController, viewModel: MainViewModel) {
+fun AddRecipeIngredientsScreen(
+    onClick: () -> Unit
+) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -176,9 +182,7 @@ fun AddRecipeIngredientsScreen(navController: NavHostController, viewModel: Main
         ) {
             Text("여기는 재료 추가 화면")
             Button(
-                onClick = {
-                    navController.navigate(Screen.AddRecipeSteps.route)
-                }
+                onClick = { onClick() }
             ) {
                 Text("다음")
             }
@@ -187,7 +191,9 @@ fun AddRecipeIngredientsScreen(navController: NavHostController, viewModel: Main
 }
 
 @Composable
-fun AddRecipeStepsScreen(navController: NavHostController, viewModel: MainViewModel) {
+fun AddRecipeStepsScreen(
+    onClick: () -> Unit
+) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -197,13 +203,7 @@ fun AddRecipeStepsScreen(navController: NavHostController, viewModel: MainViewMo
         ) {
             Text("여기는 조리 과정 설명")
             Button(
-                onClick = {
-                    navController.navigate(Screen.Main.route) {
-                        popUpTo(Screen.Main.route) { //메인 화면 까지 스택 제거
-                            inclusive = true //메인 화면 자체도 스택 제거
-                        }
-                    }
-                }
+                onClick = { onClick() }
             ) {
                 Text("완료")
             }

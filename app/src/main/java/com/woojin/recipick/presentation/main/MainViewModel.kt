@@ -6,24 +6,28 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woojin.recipick.presentation.RecipeInputState
+import com.woojin.recipick.presentation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
-    private val _addRecipeClick = MutableSharedFlow<Unit>()
-    val addRecipeClick: SharedFlow<Unit> = _addRecipeClick.asSharedFlow()
+    private val _navigateToScreen = MutableStateFlow<Screen>(Screen.Main)
+    val navigateToScreen: StateFlow<Screen> = _navigateToScreen.asStateFlow()
 
     private var recipeInputState by mutableStateOf(RecipeInputState())
         private set
 
-    fun onAddRecipeClick() {
+    fun navUpdate(value: Screen) {
         viewModelScope.launch {
-            _addRecipeClick.emit(Unit)
+            _navigateToScreen.emit(value)
         }
     }
 
