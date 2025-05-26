@@ -1,5 +1,6 @@
 package com.woojin.recipick.presentation.add_recipe
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,7 @@ fun AddRecipeTitleScreen(
     navController: NavHostController,
     onClick: (String) -> Unit
 ) {
+    val context = LocalContext.current
     var textState by remember { mutableStateOf("") }
 
     Scaffold(
@@ -69,7 +72,13 @@ fun AddRecipeTitleScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { onClick(textState) }
+                    onClick = {
+                        if (textState.trim().isNotEmpty()) {
+                            onClick(textState)
+                        } else {
+                            Toast.makeText(context, "제목을 입력하세요.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 ) {
                     Text("다음")
                 }
