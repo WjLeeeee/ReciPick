@@ -31,6 +31,11 @@ class MainViewModel @Inject constructor() : ViewModel() {
     /** 레시피 제목 update */
     fun updateRecipeTitle(title: String) {
         recipeInputState = recipeInputState.copy(title = title)
+        navUpdate(Screen.AddRecipeIngredients)
+    }
+    
+    fun getRecipeTitle(): String {
+        return recipeInputState.title
     }
 
     /** 레시피 재료 추가 */

@@ -1,15 +1,19 @@
 package com.woojin.recipick.presentation.main
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
@@ -20,6 +24,7 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun AppScreen(
     navController: NavHostController,
+    viewModel: MainViewModel,
     onClick: () -> Unit
 ) {
     Scaffold(
@@ -35,14 +40,27 @@ fun AppScreen(
             FloatingButton(onClick)
         }
     ) { innerPadding ->
-        MainScreen(modifier = Modifier.padding(innerPadding))
+        MainScreen(
+            modifier = Modifier.padding(innerPadding),
+            viewModel = viewModel
+        )
     }
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel
+) {
+    val context = LocalContext.current
     Column(modifier = modifier.padding(16.dp)) {
-        Text("여기는 메인 화면")
+        Button(
+            onClick = {
+                Toast.makeText(context, viewModel.getRecipeTitle(), Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            Text("title 가져오기")
+        }
     }
 }
 
@@ -53,6 +71,7 @@ fun MainPreview() {
     RecipickTheme {
         AppScreen(
             navController = rememberNavController(),
+            viewModel = MainViewModel(),
             onClick = {}
         )
     }
