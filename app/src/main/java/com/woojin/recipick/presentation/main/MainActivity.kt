@@ -68,24 +68,28 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(Screen.Main.route) {
                         AppScreen(
+                            navController = navController,
                             onClick = { viewModel.navUpdate(Screen.AddRecipeTitle) }
                         )
                     }
 
                     composable(Screen.AddRecipeTitle.route) {
                         AddRecipeTitleScreen(
+                            navController = navController,
                             onClick = { viewModel.navUpdate(Screen.AddRecipeIngredients) }
                         )
                     }
 
                     composable(Screen.AddRecipeIngredients.route) {
                         AddRecipeIngredientsScreen(
+                            navController = navController,
                             onClick = { viewModel.navUpdate(Screen.AddRecipeSteps) }
                         )
                     }
 
                     composable(Screen.AddRecipeSteps.route) {
                         AddRecipeStepsScreen(
+                            navController = navController,
                             onClick = { viewModel.navUpdate(Screen.Main) }
                         )
                     }

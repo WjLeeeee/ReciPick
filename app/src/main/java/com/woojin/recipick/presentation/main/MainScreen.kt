@@ -10,18 +10,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.presentation.main.components.FloatingButton
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
-fun AppScreen(onClick: () -> Unit) {
+fun AppScreen(
+    navController: NavHostController,
+    onClick: () -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             MyTopAppBar(
-                title = stringResource(R.string.main_title)
+                title = stringResource(R.string.main_title),
+                false,
+                onBackClick = {}
             )
         },
         floatingActionButton = {
@@ -44,6 +51,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
 @Composable
 fun MainPreview() {
     RecipickTheme {
-        AppScreen(onClick = {})
+        AppScreen(
+            navController = rememberNavController(),
+            onClick = {}
+        )
     }
 }

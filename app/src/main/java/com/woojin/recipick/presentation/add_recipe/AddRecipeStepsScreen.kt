@@ -8,15 +8,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.woojin.recipick.R
+import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
 fun AddRecipeStepsScreen(
+    navController: NavHostController,
     onClick: () -> Unit
 ) {
-    Scaffold { innerPadding ->
+    Scaffold (
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            MyTopAppBar(
+                title = stringResource(R.string.add_recipe_title),
+                true,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+    ){ innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -37,6 +52,9 @@ fun AddRecipeStepsScreen(
 @Composable
 fun AddRecipeStepsScreenPreview() {
     RecipickTheme {
-        AddRecipeStepsScreen(onClick = {})
+        AddRecipeStepsScreen(
+            navController = rememberNavController(),
+            onClick = {}
+        )
     }
 }
