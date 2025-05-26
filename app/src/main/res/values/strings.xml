@@ -2,4 +2,6 @@
     <string name="app_name">recipick</string>
     <string name="main_title">My Recipes</string>
     <string name="add_recipe_title">Add Recipes</string>
+    <string name="recipe_title_text_hint">레시피 제목을 입력하세요.</string>
+    <string name="recipe_title_empty">제목을 입력하세요.</string>
 </resources>

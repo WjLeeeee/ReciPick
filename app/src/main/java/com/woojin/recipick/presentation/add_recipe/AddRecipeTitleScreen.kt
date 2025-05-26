@@ -67,7 +67,7 @@ fun AddRecipeTitleScreen(
                     onValueChange = { newText ->
                         textState = newText
                     },
-                    label = { Text("레시피 제목을 입력하세요.") },
+                    label = { Text(stringResource(R.string.recipe_title_text_hint)) },
                     singleLine = true
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -76,7 +76,7 @@ fun AddRecipeTitleScreen(
                         if (textState.trim().isNotEmpty()) {
                             onClick(textState)
                         } else {
-                            Toast.makeText(context, "제목을 입력하세요.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, (R.string.recipe_title_empty), Toast.LENGTH_SHORT).show()
                         }
                     }
                 ) {
