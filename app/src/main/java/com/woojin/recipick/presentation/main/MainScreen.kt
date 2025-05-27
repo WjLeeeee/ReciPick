@@ -1,5 +1,6 @@
 package com.woojin.recipick.presentation.main
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,6 +61,13 @@ fun MainScreen(
             }
         ) {
             Text("title 가져오기")
+        }
+        Button(
+            onClick = {
+                Toast.makeText(context, "${viewModel.getIngredients()}", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            Text("ingredients 가져오기")
         }
     }
 }

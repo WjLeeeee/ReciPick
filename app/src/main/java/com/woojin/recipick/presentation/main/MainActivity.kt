@@ -5,36 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.woojin.recipick.R
 import com.woojin.recipick.presentation.add_recipe.AddRecipeIngredientsScreen
 import com.woojin.recipick.presentation.add_recipe.AddRecipeStepsScreen
 import com.woojin.recipick.presentation.add_recipe.AddRecipeTitleScreen
 import com.woojin.recipick.presentation.navigation.Screen
 import com.woojin.recipick.presentation.theme.RecipickTheme
-import com.woojin.recipick.presentation.theme.mainColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -86,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.AddRecipeIngredients.route) {
                         AddRecipeIngredientsScreen(
                             navController = navController,
-                            onClick = { viewModel.navUpdate(Screen.AddRecipeSteps) }
+                            onClick = { viewModel.updateIngredients(it) }
                         )
                     }
 
