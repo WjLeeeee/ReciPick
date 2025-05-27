@@ -1,8 +1,7 @@
 package com.woojin.recipick.presentation.main
 
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woojin.recipick.presentation.add_recipe.state.RecipeInputState
@@ -19,8 +18,8 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private val _navigateToScreen = MutableStateFlow<Screen>(Screen.Main)
     val navigateToScreen: StateFlow<Screen> = _navigateToScreen.asStateFlow()
 
-    private var recipeInputState by mutableStateOf(RecipeInputState())
-        private set
+    private val _recipeInputState = mutableStateOf(RecipeInputState())
+    val recipeInputState: State<RecipeInputState> = _recipeInputState
 
     fun navUpdate(value: Screen) {
         viewModelScope.launch {
@@ -30,34 +29,45 @@ class MainViewModel @Inject constructor() : ViewModel() {
 
     /** 레시피 제목 update */
     fun updateRecipeTitle(title: String) {
-        recipeInputState = recipeInputState.copy(title = title)
+        _recipeInputState.value = _recipeInputState.value.copy(title = title)
         navUpdate(Screen.AddRecipeIngredients)
     }
     
     fun getRecipeTitle(): String {
-        return recipeInputState.title
+        return _recipeInputState.value.title
+    }
+
+    fun getIngredients(): List<String> {
+        return _recipeInputState.value.ingredients
     }
 
     /** 레시피 재료 추가 */
     fun addIngredient(ingredient: String) {
-        recipeInputState = recipeInputState.copy(
-            ingredients = recipeInputState.ingredients + ingredient
+        val currentIngredients = _recipeInputState.value.ingredients.toMutableList()
+        if (currentIngredients.contains(ingredient)) {
+            currentIngredients.remove(ingredient)
+        } else {
+            currentIngredients.add(ingredient)
+        }
+        _recipeInputState.value = _recipeInputState.value.copy(
+            ingredients = currentIngredients.toList()
         )
     }
 
     /** 레시피 재료 목록 update */
     fun updateIngredients(ingredients: List<String>) {
-        recipeInputState = recipeInputState.copy(ingredients = ingredients)
+        _recipeInputState.value = _recipeInputState.value.copy(ingredients = ingredients)
+        navUpdate(Screen.AddRecipeSteps)
     }
 
     /** 조리 단계 update */
     fun updateRecipeSteps(steps: String) {
-        recipeInputState = recipeInputState.copy(steps = steps)
+        _recipeInputState.value = _recipeInputState.value.copy(steps = steps)
     }
 
     /** 레시피 저장 */
     fun saveRecipe() {
         //상태 초기화, 아직 저장 로직은 구현 X
-        recipeInputState = RecipeInputState()
+        _recipeInputState.value = RecipeInputState()
     }
 }
