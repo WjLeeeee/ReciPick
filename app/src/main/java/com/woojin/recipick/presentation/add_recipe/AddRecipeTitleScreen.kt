@@ -1,5 +1,6 @@
 package com.woojin.recipick.presentation.add_recipe
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -21,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -39,6 +44,12 @@ fun AddRecipeTitleScreen(
 ) {
     val context = LocalContext.current
     var textState by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
+
+    val handleSubmit = {
+        btnOkClick(context, textState) { onClick(textState) }
+        focusManager.clearFocus()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -68,16 +79,17 @@ fun AddRecipeTitleScreen(
                         textState = newText
                     },
                     label = { Text(stringResource(R.string.recipe_title_text_hint)) },
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default
+                        .copy(imeAction = ImeAction.Done), //키보드 액션 버튼을 '완료' 로 설정
+                    keyboardActions = KeyboardActions(
+                        onDone = { handleSubmit() } //완료 버튼 클릭 시
+                    )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        if (textState.trim().isNotEmpty()) {
-                            onClick(textState)
-                        } else {
-                            Toast.makeText(context, (R.string.recipe_title_empty), Toast.LENGTH_SHORT).show()
-                        }
+                        btnOkClick(context, textState) { onClick(textState) }
                     }
                 ) {
                     Text("다음")
@@ -95,5 +107,14 @@ fun AddRecipeTitleScreenPreview() {
             navController = rememberNavController(),
             onClick = {}
         )
+    }
+}
+
+/** 다음 버튼 혹은 키보드 완료 버튼 클릭 시*/
+private fun btnOkClick(context: Context, text: String, isTitleOk: () -> Unit) {
+    if (text.trim().isNotEmpty()) {
+        isTitleOk() //문제 없으면 콜백
+    } else {
+        Toast.makeText(context, (R.string.recipe_title_empty), Toast.LENGTH_SHORT).show()
     }
 }
