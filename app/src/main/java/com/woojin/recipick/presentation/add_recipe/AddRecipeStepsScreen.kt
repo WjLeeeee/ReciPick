@@ -72,7 +72,11 @@ fun AddRecipeStepsScreen(
                             // 해당 스텝의 설명을 업데이트
                             steps[index] = step.copy(description = newDescription)
                         },
-                        onDeleteClick = { steps.remove(step) }
+                        onDeleteClick = {
+                            if (steps.size > 1) {
+                                steps.remove(step)
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
