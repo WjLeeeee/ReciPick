@@ -41,6 +41,10 @@ class MainViewModel @Inject constructor() : ViewModel() {
         return _recipeInputState.value.ingredients
     }
 
+    fun getSteps(): List<String> {
+        return _recipeInputState.value.steps
+    }
+
     /** 레시피 재료 추가 */
     fun addIngredient(ingredient: String) {
         val currentIngredients = _recipeInputState.value.ingredients.toMutableList()
@@ -61,8 +65,9 @@ class MainViewModel @Inject constructor() : ViewModel() {
     }
 
     /** 조리 단계 update */
-    fun updateRecipeSteps(steps: String) {
+    fun updateRecipeSteps(steps: List<String>) {
         _recipeInputState.value = _recipeInputState.value.copy(steps = steps)
+        navUpdate(Screen.Main)
     }
 
     /** 레시피 저장 */

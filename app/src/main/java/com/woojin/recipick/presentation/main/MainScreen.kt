@@ -1,6 +1,5 @@
 package com.woojin.recipick.presentation.main
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +13,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
@@ -68,6 +66,13 @@ fun MainScreen(
             }
         ) {
             Text("ingredients 가져오기")
+        }
+        Button(
+            onClick = {
+                Toast.makeText(context, "${viewModel.getSteps()}", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            Text("조리 과정 가져오기")
         }
     }
 }

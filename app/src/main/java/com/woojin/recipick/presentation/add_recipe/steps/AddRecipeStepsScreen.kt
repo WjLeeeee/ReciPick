@@ -34,9 +34,9 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun AddRecipeStepsScreen(
     navController: NavHostController,
-    onClick: () -> Unit
+    onClick: (List<String>) -> Unit
 ) {
-    val steps = remember {
+    val stepsStateList = remember {
         mutableStateListOf(
             RecipeStep(1, ""),
             RecipeStep(2, ""),
@@ -67,17 +67,17 @@ fun AddRecipeStepsScreen(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                itemsIndexed(steps, key = { _, step -> step.id }) { index, step ->
+                itemsIndexed(stepsStateList, key = { _, step -> step.id }) { index, step ->
                     StepInputField(
                         stepNumber = index + 1,
                         text = step.description,
                         onTextChange = { newDescription ->
                             // 해당 스텝의 설명을 업데이트
-                            steps[index] = step.copy(description = newDescription)
+                            stepsStateList[index] = step.copy(description = newDescription)
                         },
                         onDeleteClick = {
-                            if (steps.size > 1) {
-                                steps.remove(step)
+                            if (stepsStateList.size > 1) {
+                                stepsStateList.remove(step)
                             }
                         }
                     )
@@ -87,8 +87,8 @@ fun AddRecipeStepsScreen(
                     // 조리 과정 추가 버튼
                     OutlinedButton(
                         onClick = {
-                            val newId = (steps.lastOrNull()?.id ?: 0) + 1
-                            steps.add(RecipeStep(newId, ""))
+                            val newId = (stepsStateList.lastOrNull()?.id ?: 0) + 1
+                            stepsStateList.add(RecipeStep(newId, ""))
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -100,8 +100,11 @@ fun AddRecipeStepsScreen(
                 item {
                     Button(
                         onClick = {
-                            val isAllStepsFilled = steps.all { it.description.isNotBlank() }
-                            if (isAllStepsFilled) onClick() else {
+                            val isAllStepsFilled = stepsStateList.all { it.description.isNotBlank() }
+                            if (isAllStepsFilled) {
+                                val stepDescriptions = stepsStateList.map { it.description }
+                                onClick(stepDescriptions)
+                            } else {
                                 Toast.makeText(context, context.getString(R.string.fill_all_steps), Toast.LENGTH_SHORT).show()
                             }
                         },

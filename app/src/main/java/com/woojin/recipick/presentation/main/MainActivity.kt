@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.AddRecipeSteps.route) {
                         AddRecipeStepsScreen(
                             navController = navController,
-                            onClick = { viewModel.navUpdate(Screen.Main) }
+                            onClick = { viewModel.updateRecipeSteps(it) }
                         )
                     }
                 }
