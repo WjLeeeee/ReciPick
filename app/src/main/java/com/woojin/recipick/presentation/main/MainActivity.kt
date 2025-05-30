@@ -9,9 +9,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.woojin.recipick.presentation.add_recipe.AddRecipeIngredientsScreen
-import com.woojin.recipick.presentation.add_recipe.AddRecipeStepsScreen
-import com.woojin.recipick.presentation.add_recipe.AddRecipeTitleScreen
+import com.woojin.recipick.presentation.add_recipe.ingredients.AddRecipeIngredientsScreen
+import com.woojin.recipick.presentation.add_recipe.steps.AddRecipeStepsScreen
+import com.woojin.recipick.presentation.add_recipe.title.AddRecipeTitleScreen
 import com.woojin.recipick.presentation.navigation.Screen
 import com.woojin.recipick.presentation.theme.RecipickTheme
 import dagger.hilt.android.AndroidEntryPoint

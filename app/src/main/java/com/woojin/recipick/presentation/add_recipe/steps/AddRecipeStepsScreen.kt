@@ -1,4 +1,4 @@
-package com.woojin.recipick.presentation.add_recipe
+package com.woojin.recipick.presentation.add_recipe.steps
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
-import com.woojin.recipick.presentation.add_recipe.components.StepInputField
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
 

@@ -1,4 +1,4 @@
-package com.woojin.recipick.presentation.add_recipe
+package com.woojin.recipick.presentation.add_recipe.title
 
 import android.content.Context
 import android.widget.Toast
@@ -29,11 +29,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
-import com.woojin.recipick.presentation.main.MainViewModel
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
 

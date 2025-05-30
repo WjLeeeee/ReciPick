@@ -1,4 +1,4 @@
-package com.woojin.recipick.presentation.add_recipe
+package com.woojin.recipick.presentation.add_recipe.ingredients
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +18,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.data.datasource.local.FoodCategories
-import com.woojin.recipick.presentation.add_recipe.components.TitleAndRowItems
 import com.woojin.recipick.presentation.main.MainViewModel
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
