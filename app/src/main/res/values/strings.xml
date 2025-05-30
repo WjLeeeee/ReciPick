@@ -7,4 +7,5 @@
     <string name="add_recipe_step_button">조리과정 추가</string>
     <string name="recipe_step_hint">조리과정 입력</string>
     <string name="save_button">저장</string>
+    <string name="fill_all_steps">모든 조리 과정을 입력하세요.</string>
 </resources>

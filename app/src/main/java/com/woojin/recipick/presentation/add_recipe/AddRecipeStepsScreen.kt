@@ -1,5 +1,6 @@
 package com.woojin.recipick.presentation.add_recipe
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,8 @@ fun AddRecipeStepsScreen(
             RecipeStep(3, ""),
         )
     }
+    val context = LocalContext.current
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -96,7 +100,13 @@ fun AddRecipeStepsScreen(
                 }
                 item {
                     Button(
-                        onClick = { onClick() }
+                        onClick = {
+                            val isAllStepsFilled = steps.all { it.description.isNotBlank() }
+                            if (isAllStepsFilled) onClick() else {
+                                Toast.makeText(context, context.getString(R.string.fill_all_steps), Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(R.string.save_button))
                     }
