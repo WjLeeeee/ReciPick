@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.presentation.main.components.FloatingButton
+import com.woojin.recipick.presentation.main.components.MainItem
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
 
@@ -53,6 +54,7 @@ fun MainScreen(
 ) {
     val context = LocalContext.current
     Column(modifier = modifier.padding(16.dp)) {
+        MainItem(viewModel.getRecipeTitle()) { }
         Button(
             onClick = {
                 Toast.makeText(context, viewModel.getRecipeTitle(), Toast.LENGTH_SHORT).show()
