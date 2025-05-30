@@ -85,7 +85,7 @@ fun AddRecipeStepsScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Filled.Add, contentDescription = "조리과정 추가")
+                        Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_recipe_step_button))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.add_recipe_step_button))
                     }
@@ -94,7 +94,7 @@ fun AddRecipeStepsScreen(
                     Button(
                         onClick = { onClick() }
                     ) {
-                        Text("완료")
+                        Text(stringResource(R.string.save_button))
                     }
                 }
             }

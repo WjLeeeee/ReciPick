@@ -6,4 +6,5 @@
     <string name="recipe_title_empty">제목을 입력하세요.</string>
     <string name="add_recipe_step_button">조리과정 추가</string>
     <string name="recipe_step_hint">조리과정 입력</string>
+    <string name="save_button">저장</string>
 </resources>
