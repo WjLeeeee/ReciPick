@@ -9,10 +9,11 @@ import com.woojin.recipick.data.local.entity.RecipeEntity
 import com.woojin.recipick.presentation.add_recipe.state.RecipeInputState
 import com.woojin.recipick.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,8 +22,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val recipeDao: RecipeDao? //preView 때문에 nullable로 설정.
 ) : ViewModel() {
-    private val _navigateToScreen = MutableStateFlow<Screen>(Screen.Main)
-    val navigateToScreen: StateFlow<Screen> = _navigateToScreen.asStateFlow()
+    private val _navigateToScreen = MutableSharedFlow<Screen>()
+    val navigateToScreen: SharedFlow<Screen> = _navigateToScreen.asSharedFlow()
 
     private val _recipeInputState = mutableStateOf(RecipeInputState())
     val recipeInputState: State<RecipeInputState> = _recipeInputState
