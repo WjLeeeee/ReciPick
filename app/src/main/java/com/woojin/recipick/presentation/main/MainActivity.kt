@@ -47,7 +47,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(Screen.Main.route) {
                         AppScreen(
-                            navController = navController,
                             viewModel = viewModel,
                             onClick = { viewModel.navUpdate(Screen.AddRecipeTitle) }
                         )
