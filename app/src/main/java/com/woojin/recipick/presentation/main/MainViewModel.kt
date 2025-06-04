@@ -1,6 +1,5 @@
 package com.woojin.recipick.presentation.main
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -30,7 +29,6 @@ class MainViewModel @Inject constructor(
 
     fun navUpdate(value: Screen) {
         viewModelScope.launch {
-            Log.d("woojinCheck", "화면 전환")
             _navigateToScreen.emit(value)
         }
     }
