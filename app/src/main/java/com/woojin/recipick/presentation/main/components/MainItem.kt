@@ -1,8 +1,13 @@
 package com.woojin.recipick.presentation.main.components
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,23 +20,29 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun MainItem(
     recipeTitle: String,
-    onItemClick: () -> Unit
+    onItemClick: () -> Unit,
+    onDeleteItemClick: () -> Unit
 ) {
     Row (
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
     ){
         OutlinedButton(
             onClick = { onItemClick() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.weight(1f)
         ) {
             Text(recipeTitle)
         }
-        Text(
-            text = recipeTitle,
-            modifier = Modifier.padding(8.dp)
-        )
+
+        Spacer(modifier = Modifier.width(4.dp))
+
+        IconButton(onClick = { onDeleteItemClick() }) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Delete Recipe"
+            )
+        }
     }
 }
 
@@ -41,7 +52,8 @@ fun MainItemPreview() {
     RecipickTheme {
         MainItem(
             recipeTitle = "명란파스타",
-            onItemClick = {}
+            onItemClick = {},
+            onDeleteItemClick = {}
         )
     }
 }

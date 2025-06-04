@@ -1,15 +1,22 @@
 package com.woojin.recipick.presentation.main
 
-import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +48,8 @@ fun AppScreen(
         }
     ) { innerPadding ->
         MainScreen(
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding)
+                .background(Color.White),
             viewModel = viewModel
         )
     }
@@ -52,33 +60,44 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel
 ) {
-    val context = LocalContext.current
-    Column(modifier = modifier.padding(16.dp)) {
-        MainItem(viewModel.getRecipeTitle()) { }
-        Button(
-            onClick = {
-                Toast.makeText(context, viewModel.getRecipeTitle(), Toast.LENGTH_SHORT).show()
+    val recipesState by viewModel.recipes.collectAsState() //저장된 레시피
+    when {
+        recipesState.isEmpty() -> {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "저장된 레시피가 없습니다.\n새로운 레시피를 추가해보세요!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
-        ) {
-            Text("title 가져오기")
         }
-        Button(
-            onClick = {
-                Toast.makeText(context, "${viewModel.getIngredients()}", Toast.LENGTH_SHORT).show()
+
+        else -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(
+                    items = recipesState,
+                    key = { recipe -> recipe.id ?: -1 }
+                ) { recipe ->
+                    MainItem(
+                        recipeTitle = recipe.title,
+                        onItemClick = { },
+                        onDeleteItemClick = { viewModel.deleteRecipe(recipe.id) }
+                    )
+                }
             }
-        ) {
-            Text("ingredients 가져오기")
-        }
-        Button(
-            onClick = {
-                Toast.makeText(context, "${viewModel.getSteps()}", Toast.LENGTH_SHORT).show()
-            }
-        ) {
-            Text("조리 과정 가져오기")
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -86,7 +105,7 @@ fun MainPreview() {
     RecipickTheme {
         AppScreen(
             navController = rememberNavController(),
-            viewModel = MainViewModel(),
+            viewModel = MainViewModel(null),
             onClick = {}
         )
     }
