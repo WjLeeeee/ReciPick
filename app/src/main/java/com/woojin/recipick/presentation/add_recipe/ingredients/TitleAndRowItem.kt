@@ -57,7 +57,9 @@ fun TitleAndRowItems(
                         borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                         selectedBorderColor = MaterialTheme.colorScheme.primary,
                         borderWidth = 1.dp,
-                        selectedBorderWidth = 1.dp
+                        selectedBorderWidth = 1.dp,
+                        enabled = true,
+                        selected = false
                     )
                 )
             }
