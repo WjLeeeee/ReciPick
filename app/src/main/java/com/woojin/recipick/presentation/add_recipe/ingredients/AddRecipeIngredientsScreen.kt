@@ -25,7 +25,7 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun AddRecipeIngredientsScreen(
     navController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: MainViewModel,
     onClick: (List<String>) -> Unit
 ) {
     Scaffold (
@@ -94,16 +94,5 @@ fun AddRecipeIngredientsScreen(
                 Text("다음")
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AddRecipeIngredientsScreenPreview() {
-    RecipickTheme {
-        AddRecipeIngredientsScreen(
-            navController = rememberNavController(),
-            onClick = {}
-        )
     }
 }

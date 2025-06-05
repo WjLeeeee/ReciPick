@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.woojin.recipick.presentation.add_recipe.detail.RecipeDetailScreen
 import com.woojin.recipick.presentation.add_recipe.ingredients.AddRecipeIngredientsScreen
 import com.woojin.recipick.presentation.add_recipe.steps.AddRecipeStepsScreen
 import com.woojin.recipick.presentation.add_recipe.title.AddRecipeTitleScreen
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                                     inclusive = true //메인 화면 자체도 스택 제거
                                 }
                             }
+                            Screen.RecipeDetail -> navController.navigate(Screen.RecipeDetail.route)
                         }
                     }
                 }
@@ -64,6 +66,7 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.AddRecipeIngredients.route) {
                         AddRecipeIngredientsScreen(
                             navController = navController,
+                            viewModel = viewModel,
                             onClick = { viewModel.updateIngredients(it) }
                         )
                     }
@@ -72,6 +75,13 @@ class MainActivity : ComponentActivity() {
                         AddRecipeStepsScreen(
                             navController = navController,
                             onClick = { viewModel.updateRecipeSteps(it) }
+                        )
+                    }
+
+                    composable(Screen.RecipeDetail.route) {
+                        RecipeDetailScreen(
+                            navController = navController,
+                            viewModel = viewModel
                         )
                     }
                 }

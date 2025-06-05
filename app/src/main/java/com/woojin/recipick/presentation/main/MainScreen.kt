@@ -87,7 +87,7 @@ fun MainScreen(
                 ) { recipe ->
                     MainItem(
                         recipeTitle = recipe.title,
-                        onItemClick = { },
+                        onItemClick = { viewModel.recipeDetail(recipe.id) },
                         onDeleteItemClick = { viewModel.deleteRecipe(recipe.id) }
                     )
                 }

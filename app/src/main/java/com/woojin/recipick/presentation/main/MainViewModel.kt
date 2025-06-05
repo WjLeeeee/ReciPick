@@ -1,5 +1,6 @@
 package com.woojin.recipick.presentation.main
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,10 +11,12 @@ import com.woojin.recipick.presentation.add_recipe.state.RecipeInputState
 import com.woojin.recipick.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +30,9 @@ class MainViewModel @Inject constructor(
 
     private val _recipeInputState = mutableStateOf(RecipeInputState())
     val recipeInputState: State<RecipeInputState> = _recipeInputState
+
+    private val _recipeDetailState = MutableStateFlow(RecipeEntity(null, "", emptyList(), emptyList()))
+    val recipeDetailState: StateFlow<RecipeEntity> = _recipeDetailState.asStateFlow()
 
     fun navUpdate(value: Screen) {
         viewModelScope.launch {
@@ -96,6 +102,19 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             recipeId?.let { id ->
                 recipeDao?.delete(id)
+            }
+        }
+    }
+
+    /** 레시피 상세 */
+    fun recipeDetail(recipeId: Int?) {
+        viewModelScope.launch {
+            recipeId?.let { id ->
+                recipeDao?.getRecipe(id)?.let { data ->
+                    _recipeDetailState.emit(data)
+                    Log.d("woojinCheck", "data: ${_recipeDetailState.value}")
+                }
+                navUpdate(Screen.RecipeDetail)
             }
         }
     }
