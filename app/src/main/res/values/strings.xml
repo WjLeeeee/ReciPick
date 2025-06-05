@@ -2,10 +2,14 @@
     <string name="app_name">recipick</string>
     <string name="main_title">My Recipes</string>
     <string name="add_recipe_title">Add Recipes</string>
+    <string name="recipe_detail_title">Recipe</string>
     <string name="recipe_title_text_hint">레시피 제목을 입력하세요.</string>
     <string name="recipe_title_empty">제목을 입력하세요.</string>
     <string name="add_recipe_step_button">조리과정 추가</string>
     <string name="recipe_step_hint">조리과정 입력</string>
     <string name="save_button">저장</string>
     <string name="fill_all_steps">모든 조리 과정을 입력하세요.</string>
+    <string name="ingredients_section_title">필요한 재료</string>
+    <string name="no_ingredients_message">저장된 재료가 없습니다.</string>
+    <string name="steps_section_title">조리 단계</string>
 </resources>
