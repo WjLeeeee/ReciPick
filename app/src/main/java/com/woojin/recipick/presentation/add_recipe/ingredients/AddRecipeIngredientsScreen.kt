@@ -88,7 +88,9 @@ fun AddRecipeIngredientsScreen(
                 onIngredientClick = { viewModel.addIngredient(it) }
             )
             Button(
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
                 onClick = { onClick(viewModel.recipeInputState.value.ingredients) }
             ) {
                 Text("다음")
