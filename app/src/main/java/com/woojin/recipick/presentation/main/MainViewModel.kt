@@ -50,7 +50,6 @@ class MainViewModel @Inject constructor(
     /** 레시피 제목 update */
     fun updateRecipeTitle(title: String) {
         _recipeInputState.value = _recipeInputState.value.copy(title = title)
-        navUpdate(Screen.AddRecipeIngredients)
     }
 
     /** 레시피 재료 추가 */
@@ -69,7 +68,6 @@ class MainViewModel @Inject constructor(
     /** 레시피 재료 목록 update */
     fun updateIngredients(ingredients: List<String>) {
         _recipeInputState.value = _recipeInputState.value.copy(ingredients = ingredients)
-        navUpdate(Screen.AddRecipeSteps)
     }
 
     /** 조리 단계 update */

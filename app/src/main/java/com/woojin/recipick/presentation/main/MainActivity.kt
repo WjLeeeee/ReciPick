@@ -10,9 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.presentation.add_recipe.detail.RecipeDetailScreen
-import com.woojin.recipick.presentation.add_recipe.ingredients.AddRecipeIngredientsScreen
 import com.woojin.recipick.presentation.add_recipe.steps.AddRecipeStepsScreen
-import com.woojin.recipick.presentation.add_recipe.title.AddRecipeTitleScreen
+import com.woojin.recipick.presentation.add_recipe.title_and_ingredients.AddRecipeTitleAndIngredients
 import com.woojin.recipick.presentation.navigation.Screen
 import com.woojin.recipick.presentation.theme.RecipickTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,14 +30,14 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(key1 = Unit) {
                     viewModel.navigateToScreen.collect { navigation ->
                         when (navigation) {
-                            Screen.AddRecipeTitle -> navController.navigate(Screen.AddRecipeTitle.route)
-                            Screen.AddRecipeIngredients -> navController.navigate(Screen.AddRecipeIngredients.route)
+                            Screen.AddRecipeTitleAndIngredients -> navController.navigate(Screen.AddRecipeTitleAndIngredients.route)
                             Screen.AddRecipeSteps -> navController.navigate(Screen.AddRecipeSteps.route)
                             Screen.Main -> navController.navigate(Screen.Main.route) {
                                 popUpTo(Screen.Main.route) { //메인 화면 까지 스택 제거
                                     inclusive = true //메인 화면 자체도 스택 제거
                                 }
                             }
+
                             Screen.RecipeDetail -> navController.navigate(Screen.RecipeDetail.route)
                         }
                     }
@@ -50,24 +49,15 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.Main.route) {
                         AppScreen(
                             viewModel = viewModel,
-                            onClick = { viewModel.navUpdate(Screen.AddRecipeTitle) }
+                            onClick = { viewModel.navUpdate(Screen.AddRecipeTitleAndIngredients) }
                         )
                     }
 
-                    composable(Screen.AddRecipeTitle.route) {
-                        AddRecipeTitleScreen(
-                            navController = navController,
-                            onClick = { recipeTitle ->
-                                viewModel.updateRecipeTitle(recipeTitle)
-                            }
-                        )
-                    }
-
-                    composable(Screen.AddRecipeIngredients.route) {
-                        AddRecipeIngredientsScreen(
+                    composable(Screen.AddRecipeTitleAndIngredients.route) {
+                        AddRecipeTitleAndIngredients(
                             navController = navController,
                             viewModel = viewModel,
-                            onClick = { viewModel.updateIngredients(it) }
+                            onComplete = { viewModel.navUpdate(Screen.AddRecipeSteps) }
                         )
                     }
 
