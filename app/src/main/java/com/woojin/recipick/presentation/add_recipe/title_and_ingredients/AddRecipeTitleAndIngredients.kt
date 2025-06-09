@@ -29,17 +29,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.presentation.main.MainViewModel
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
+import com.woojin.recipick.presentation.navigation.Screen
+import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
 fun AddRecipeTitleAndIngredients(
     navController: NavHostController,
-    viewModel: MainViewModel,
-    onComplete: () -> Unit
+    onComplete: (Pair<String, List<String>>) -> Unit
 ) {
     val context = LocalContext.current
     var title by remember { mutableStateOf("") } //레시피 제목
@@ -173,9 +176,7 @@ fun AddRecipeTitleAndIngredients(
             Button(
                 onClick = {
                     if (title.isNotBlank() && addedIngredients.isNotEmpty()) {
-                        viewModel.updateRecipeTitle(title)
-                        viewModel.updateIngredients(addedIngredients)
-                        onComplete()
+                        onComplete(Pair(title, addedIngredients))
                     } else {
                         Toast.makeText(context, R.string.please_input_all, Toast.LENGTH_SHORT).show()
                     }
@@ -185,5 +186,16 @@ fun AddRecipeTitleAndIngredients(
                 Text(stringResource(R.string.next))
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddRecipeTitleAndIngredientsPreview() {
+    RecipickTheme {
+        AddRecipeTitleAndIngredients(
+            navController = rememberNavController(),
+            onComplete = { }
+        )
     }
 }

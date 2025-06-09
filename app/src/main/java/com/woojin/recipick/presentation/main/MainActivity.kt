@@ -56,8 +56,11 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.AddRecipeTitleAndIngredients.route) {
                         AddRecipeTitleAndIngredients(
                             navController = navController,
-                            viewModel = viewModel,
-                            onComplete = { viewModel.navUpdate(Screen.AddRecipeSteps) }
+                            onComplete = { data ->
+                                viewModel.updateRecipeTitle(data.first)
+                                viewModel.updateIngredients(data.second)
+                                viewModel.navUpdate(Screen.AddRecipeSteps)
+                            }
                         )
                     }
 
