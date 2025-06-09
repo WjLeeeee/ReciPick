@@ -3,7 +3,15 @@
     <string name="main_title">My Recipes</string>
     <string name="add_recipe_title">Add Recipes</string>
     <string name="recipe_detail_title">Recipe</string>
-    <string name="recipe_title_text_hint">레시피 제목을 입력하세요.</string>
+    <string name="recipe_title_text">레시피 제목</string>
+    <string name="recipe_ingredient_text">재료 이름</string>
+    <string name="recipe_write">레시피 제목을 입력하세요.</string>
+    <string name="unit">단위:</string>
+    <string name="put_ingredient_and_quantity">재료와 양을 입력해 주세요.</string>
+    <string name="add_button">추가</string>
+    <string name="added_ingredient">추가된 재료:</string>
+    <string name="please_input_all">제목과 재료를 모두 입력해 주세요.</string>
+    <string name="next">다음</string>
     <string name="recipe_title_empty">제목을 입력하세요.</string>
     <string name="add_recipe_step_button">조리과정 추가</string>
     <string name="recipe_step_hint">조리과정 입력</string>
