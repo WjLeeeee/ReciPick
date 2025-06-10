@@ -53,12 +53,12 @@ fun AddRecipeTitleAndIngredients(
 
     val addedIngredients = remember { mutableStateListOf<String>() } //추가된 재료
 
-    val unitOptions = listOf("g", "스푼", "컵", "개")
+    val unitOptions = listOf( "개", "g", "스푼", "컵")
     val unitQuantities = when (selectedUnit) {
-        "g" -> listOf(100f, 200f, 600f)
+        "개" -> listOf(0.5f, 1f, 2f)
+        "g" -> listOf(50f, 100f, 600f)
         "스푼" -> listOf(0.3f, 0.5f, 1f)
         "컵" -> listOf(0.3f, 0.5f, 1f)
-        "개" -> listOf(0.5f, 1f, 2f)
         else -> emptyList()
     }
 
@@ -84,7 +84,8 @@ fun AddRecipeTitleAndIngredients(
                 value = title,
                 onValueChange = { title = it },
                 label = { Text(stringResource(R.string.recipe_title_text)) },
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier.fillMaxSize()
             )
 
             HorizontalDivider()
@@ -94,7 +95,8 @@ fun AddRecipeTitleAndIngredients(
                 value = ingredientName,
                 onValueChange = { ingredientName = it },
                 label = { Text(stringResource(R.string.recipe_ingredient_text)) },
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier.fillMaxSize()
             )
 
             // 단위 선택
