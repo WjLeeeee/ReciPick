@@ -65,7 +65,7 @@ fun AddRecipeTitleAndIngredients(
     Scaffold(
         topBar = {
             MyTopAppBar(
-                title = stringResource(R.string.recipe_title_text),
+                title = stringResource(R.string.recipe_add_text),
                 true,
                 onBackClick = { navController.popBackStack() }
             )
