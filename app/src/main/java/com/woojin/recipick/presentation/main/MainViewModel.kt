@@ -54,19 +54,6 @@ class MainViewModel @Inject constructor(
         _recipeInputState.value = _recipeInputState.value.copy(title = title)
     }
 
-    /** 레시피 재료 추가 */
-    fun addIngredient(ingredient: String) {
-        val currentIngredients = _recipeInputState.value.ingredients.toMutableList()
-        if (currentIngredients.contains(ingredient)) {
-            currentIngredients.remove(ingredient)
-        } else {
-            currentIngredients.add(ingredient)
-        }
-        _recipeInputState.value = _recipeInputState.value.copy(
-            ingredients = currentIngredients.toList()
-        )
-    }
-
     /** 레시피 재료 목록 update */
     fun updateIngredients(ingredients: List<String>) {
         _recipeInputState.value = _recipeInputState.value.copy(ingredients = ingredients)
