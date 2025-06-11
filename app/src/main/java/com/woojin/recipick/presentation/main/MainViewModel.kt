@@ -36,12 +36,14 @@ class MainViewModel @Inject constructor(
     private val _selectedIngredientName = mutableStateOf<String>("")
     val selectedIngredientName: State<String> = _selectedIngredientName
 
+    /** 화면 전환 */
     fun navUpdate(value: Screen) {
         viewModelScope.launch {
             _navigateToScreen.emit(value)
         }
     }
 
+    /** 현재 까지 앱 DB에 저장된 레시피 collect 할 변수 */
     val recipes: StateFlow<List<RecipeEntity>> = recipeDao.getAll()
         .stateIn(
             scope = viewModelScope,
@@ -105,9 +107,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /** 재료 선택 화면 에서 가져 오는 재료의 이름 저장 */
     fun selectedIngredientName(name: String) {
         _selectedIngredientName.value = name
     }
+
+    /** 재료 선택 화면 에서 가져 오는 재료의 이름 저장 이후 초기화 */
     fun clearSelectedIngredientName() {
         _selectedIngredientName.value = ""
     }
