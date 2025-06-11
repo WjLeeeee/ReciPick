@@ -6,10 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.presentation.add_recipe.detail.RecipeDetailScreen
+import com.woojin.recipick.presentation.add_recipe.ingredients.AddRecipeIngredientsScreen
 import com.woojin.recipick.presentation.add_recipe.steps.AddRecipeStepsScreen
 import com.woojin.recipick.presentation.add_recipe.title_and_ingredients.AddRecipeTitleAndIngredients
 import com.woojin.recipick.presentation.navigation.Screen
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
                     viewModel.navigateToScreen.collect { navigation ->
                         when (navigation) {
                             Screen.AddRecipeTitleAndIngredients -> navController.navigate(Screen.AddRecipeTitleAndIngredients.route)
+                            Screen.AddRecipeIngredients -> navController.navigate(Screen.AddRecipeIngredients.route)
                             Screen.AddRecipeSteps -> navController.navigate(Screen.AddRecipeSteps.route)
                             Screen.Main -> navController.navigate(Screen.Main.route) {
                                 popUpTo(Screen.Main.route) { //메인 화면 까지 스택 제거
@@ -54,13 +57,26 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(Screen.AddRecipeTitleAndIngredients.route) {
+                        val selectedIngredientName by viewModel.selectedIngredientName
                         AddRecipeTitleAndIngredients(
                             navController = navController,
+                            selectedIngredientName = selectedIngredientName,
+                            clearSelectedIngredient = { viewModel.clearSelectedIngredientName() },
+                            addIngredientsClick = {
+                                viewModel.navUpdate(Screen.AddRecipeIngredients)
+                            },
                             onComplete = { data ->
                                 viewModel.updateRecipeTitle(data.first)
                                 viewModel.updateIngredients(data.second)
                                 viewModel.navUpdate(Screen.AddRecipeSteps)
                             }
+                        )
+                    }
+
+                    composable(Screen.AddRecipeIngredients.route) {
+                        AddRecipeIngredientsScreen(
+                            navController = navController,
+                            viewModel = viewModel
                         )
                     }
 

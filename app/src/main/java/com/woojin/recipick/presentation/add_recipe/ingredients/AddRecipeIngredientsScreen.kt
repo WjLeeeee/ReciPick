@@ -25,8 +25,7 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun AddRecipeIngredientsScreen(
     navController: NavHostController,
-    viewModel: MainViewModel,
-    onClick: (List<String>) -> Unit
+    viewModel: MainViewModel
 ) {
     Scaffold (
         modifier = Modifier.fillMaxSize(),
@@ -45,56 +44,45 @@ fun AddRecipeIngredientsScreen(
                 .padding(innerPadding)
                 .verticalScroll(scrollState)
         ) {
+            val handleIngredientClick: (String) -> Unit = { ingredientName ->
+                viewModel.selectedIngredientName(ingredientName)
+                navController.popBackStack()
+            }
             TitleAndRowItems(
                 title = "육류",
                 items = FoodCategories.meats,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
             TitleAndRowItems(
                 title = "채소류",
                 items = FoodCategories.vegetables,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
             TitleAndRowItems(
                 title = "버섯",
                 items = FoodCategories.mushRooms,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
             TitleAndRowItems(
                 title = "유제품",
                 items = FoodCategories.dairies,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
             TitleAndRowItems(
                 title = "양념",
                 items = FoodCategories.seasonings,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
             TitleAndRowItems(
                 title = "곡류",
                 items = FoodCategories.grains,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
             TitleAndRowItems(
                 title = "기타",
                 items = FoodCategories.etc,
-                selectedIngredients = viewModel.recipeInputState.value.ingredients,
-                onIngredientClick = { viewModel.addIngredient(it) }
+                onIngredientClick = handleIngredientClick
             )
-            Button(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                onClick = { onClick(viewModel.recipeInputState.value.ingredients) }
-            ) {
-                Text("다음")
-            }
         }
     }
 }

@@ -34,6 +34,9 @@ class MainViewModel @Inject constructor(
     private val _recipeDetailState = MutableStateFlow(RecipeEntity(null, "", emptyList(), emptyList()))
     val recipeDetailState: StateFlow<RecipeEntity> = _recipeDetailState.asStateFlow()
 
+    private val _selectedIngredientName = mutableStateOf<String>("")
+    val selectedIngredientName: State<String> = _selectedIngredientName
+
     fun navUpdate(value: Screen) {
         viewModelScope.launch {
             _navigateToScreen.emit(value)
@@ -115,5 +118,12 @@ class MainViewModel @Inject constructor(
                 navUpdate(Screen.RecipeDetail)
             }
         }
+    }
+
+    fun selectedIngredientName(name: String) {
+        _selectedIngredientName.value = name
+    }
+    fun clearSelectedIngredientName() {
+        _selectedIngredientName.value = ""
     }
 }

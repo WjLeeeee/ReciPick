@@ -12,18 +12,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,26 +37,39 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
-import com.woojin.recipick.presentation.main.MainViewModel
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
-import com.woojin.recipick.presentation.navigation.Screen
 import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
 fun AddRecipeTitleAndIngredients(
     navController: NavHostController,
-    onComplete: (Pair<String, List<String>>) -> Unit
+    selectedIngredientName: String, //재료 추가 버튼으로 가져오는 재료의 이름
+    clearSelectedIngredient: () -> Unit, //추가된 재료 이름 설정 후 기존 데이터 삭제
+    addIngredientsClick: () -> Unit, //재료 추가 버튼 클릭
+    onComplete: (Pair<String, List<String>>) -> Unit //다음 버튼 클릭
 ) {
     val context = LocalContext.current
-    var title by remember { mutableStateOf("") } //레시피 제목
+    var title by rememberSaveable { mutableStateOf("") } //레시피 제목
 
     var ingredientName by remember { mutableStateOf("") } //재료 이름
     var selectedUnit by remember { mutableStateOf("g") } //선택된 단위
     var quantityTotal by remember { mutableStateOf(0f) } //선택된 재료 양
 
-    val addedIngredients = remember { mutableStateListOf<String>() } //추가된 재료
+    // String 목록을 저장하고 복원하기 위한 Saver 정의
+    val listSaver = listSaver<MutableList<String>, String>(
+        save = { it.toList() }, // 저장할 때 List<String>으로 변환
+        restore = { it.toMutableStateList() } // 복원할 때 MutableList<String>으로 변환 (toMutableStateList() 사용)
+    )
+    val addedIngredients =
+        rememberSaveable(saver = listSaver) { mutableStateListOf<String>() } //추가된 재료
+    LaunchedEffect(selectedIngredientName) {
+        if (selectedIngredientName.isNotBlank()) {
+            ingredientName = selectedIngredientName
+            clearSelectedIngredient()
+        }
+    }
 
-    val unitOptions = listOf( "개", "g", "스푼", "컵")
+    val unitOptions = listOf("개", "g", "스푼", "컵")
     val unitQuantities = when (selectedUnit) {
         "개" -> listOf(0.5f, 1f, 2f)
         "g" -> listOf(50f, 100f, 600f)
@@ -91,13 +107,25 @@ fun AddRecipeTitleAndIngredients(
             HorizontalDivider()
 
             // 재료 이름
-            OutlinedTextField(
-                value = ingredientName,
-                onValueChange = { ingredientName = it },
-                label = { Text(stringResource(R.string.recipe_ingredient_text)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxSize()
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = ingredientName,
+                    onValueChange = { ingredientName = it },
+                    label = { Text(stringResource(R.string.recipe_ingredient_text)) },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+                Button(
+                    onClick = { addIngredientsClick() },
+                    modifier = Modifier.align(alignment = Alignment.CenterVertically)
+                ) {
+                    Text(text = "재료 추가")
+                }
+            }
 
             // 단위 선택
             Row(
@@ -197,6 +225,9 @@ fun AddRecipeTitleAndIngredientsPreview() {
     RecipickTheme {
         AddRecipeTitleAndIngredients(
             navController = rememberNavController(),
+            selectedIngredientName = "",
+            clearSelectedIngredient = { },
+            addIngredientsClick = { },
             onComplete = { }
         )
     }
