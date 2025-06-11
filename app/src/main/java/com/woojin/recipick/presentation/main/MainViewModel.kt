@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val recipeDao: RecipeDao? //preView 때문에 nullable로 설정.
+    private val recipeDao: RecipeDao
 ) : ViewModel() {
     private val _navigateToScreen = MutableSharedFlow<Screen>()
     val navigateToScreen: SharedFlow<Screen> = _navigateToScreen.asSharedFlow()
@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    val recipes: StateFlow<List<RecipeEntity>> = recipeDao!!.getAll()
+    val recipes: StateFlow<List<RecipeEntity>> = recipeDao.getAll()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(0),
@@ -89,7 +89,7 @@ class MainViewModel @Inject constructor(
         )
         viewModelScope.launch {
             try {
-                recipeDao?.insert(recipeEntity)
+                recipeDao.insert(recipeEntity)
                 _recipeInputState.value = RecipeInputState()
                 navUpdate(Screen.Main)
             } catch (e: Exception) {
@@ -102,7 +102,7 @@ class MainViewModel @Inject constructor(
     fun deleteRecipe(recipeId: Int?) {
         viewModelScope.launch {
             recipeId?.let { id ->
-                recipeDao?.delete(id)
+                recipeDao.delete(id)
             }
         }
     }
@@ -111,7 +111,7 @@ class MainViewModel @Inject constructor(
     fun recipeDetail(recipeId: Int?) {
         viewModelScope.launch {
             recipeId?.let { id ->
-                recipeDao?.getRecipe(id)?.let { data ->
+                recipeDao.getRecipe(id).let { data ->
                     _recipeDetailState.emit(data)
                     Log.d("woojinCheck", "data: ${_recipeDetailState.value}")
                 }

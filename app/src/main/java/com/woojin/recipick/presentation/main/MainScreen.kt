@@ -95,14 +95,3 @@ fun MainScreen(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    RecipickTheme {
-        AppScreen(
-            viewModel = MainViewModel(null),
-            onClick = {}
-        )
-    }
-}
