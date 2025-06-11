@@ -1,6 +1,5 @@
 package com.woojin.recipick.presentation.add_recipe.detail
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,17 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
-import com.woojin.recipick.data.local.dao.RecipeDao
 import com.woojin.recipick.presentation.main.MainViewModel
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
-import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
 fun RecipeDetailScreen(
@@ -35,7 +29,6 @@ fun RecipeDetailScreen(
     viewModel: MainViewModel
 ) {
     val recipeDetail = viewModel.recipeDetailState.collectAsState()
-    Log.d("woojinCheck", "detailData: $recipeDetail")
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

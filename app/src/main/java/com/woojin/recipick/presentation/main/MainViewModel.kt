@@ -1,6 +1,5 @@
 package com.woojin.recipick.presentation.main
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -113,7 +112,6 @@ class MainViewModel @Inject constructor(
             recipeId?.let { id ->
                 recipeDao.getRecipe(id).let { data ->
                     _recipeDetailState.emit(data)
-                    Log.d("woojinCheck", "data: ${_recipeDetailState.value}")
                 }
                 navUpdate(Screen.RecipeDetail)
             }
