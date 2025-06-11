@@ -35,8 +35,6 @@ fun MainItem(
             Text(recipeTitle)
         }
 
-        Spacer(modifier = Modifier.width(4.dp))
-
         IconButton(onClick = { onDeleteItemClick() }) {
             Icon(
                 imageVector = Icons.Filled.Delete,
