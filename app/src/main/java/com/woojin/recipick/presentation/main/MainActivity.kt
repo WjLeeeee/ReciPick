@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.RecipeDetail.route) {
                         RecipeDetailScreen(
                             navController = navController,
-                            viewModel = viewModel
+                            detailItem = viewModel.recipeDetailData
                         )
                     }
                 }

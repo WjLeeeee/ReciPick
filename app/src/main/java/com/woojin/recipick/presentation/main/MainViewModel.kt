@@ -10,12 +10,10 @@ import com.woojin.recipick.presentation.add_recipe.state.RecipeInputState
 import com.woojin.recipick.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,13 +26,11 @@ class MainViewModel @Inject constructor(
     val navigateToScreen: SharedFlow<Screen> = _navigateToScreen.asSharedFlow()
 
     private val _recipeInputState = mutableStateOf(RecipeInputState())
-    val recipeInputState: State<RecipeInputState> = _recipeInputState
-
-    private val _recipeDetailState = MutableStateFlow(RecipeEntity(null, "", emptyList(), emptyList()))
-    val recipeDetailState: StateFlow<RecipeEntity> = _recipeDetailState.asStateFlow()
 
     private val _selectedIngredientName = mutableStateOf<String>("")
     val selectedIngredientName: State<String> = _selectedIngredientName
+
+    var recipeDetailData = RecipeEntity(null, "", emptyList(), emptyList())
 
     /** 화면 전환 */
     fun navUpdate(value: Screen) {
@@ -100,7 +96,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             recipeId?.let { id ->
                 recipeDao.getRecipe(id).let { data ->
-                    _recipeDetailState.emit(data)
+                    recipeDetailData =
+                        RecipeEntity(data.id, data.title, data.ingredients, data.steps)
                 }
                 navUpdate(Screen.RecipeDetail)
             }

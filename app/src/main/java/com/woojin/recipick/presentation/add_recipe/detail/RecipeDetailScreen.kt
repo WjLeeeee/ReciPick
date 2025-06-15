@@ -16,19 +16,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
+import com.woojin.recipick.data.local.datasource.FoodCategories
+import com.woojin.recipick.data.local.entity.RecipeEntity
+import com.woojin.recipick.presentation.add_recipe.ingredients.TitleAndRowItems
 import com.woojin.recipick.presentation.main.MainViewModel
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
+import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
 fun RecipeDetailScreen(
     navController: NavHostController,
-    viewModel: MainViewModel
+    detailItem: RecipeEntity
 ) {
-    val recipeDetail = viewModel.recipeDetailState.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -54,7 +59,7 @@ fun RecipeDetailScreen(
                 // 레시피 제목
                 item {
                     Text(
-                        text = recipeDetail.value.title,
+                        text = detailItem.title,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp)
@@ -72,8 +77,8 @@ fun RecipeDetailScreen(
                 }
 
                 // 재료 목록
-                if (recipeDetail.value.ingredients.isNotEmpty()) {
-                    items(recipeDetail.value.ingredients) { ingredient ->
+                if (detailItem.ingredients.isNotEmpty()) {
+                    items(detailItem.ingredients) { ingredient ->
                         Text(
                             text = "- $ingredient",
                             fontSize = 16.sp,
@@ -106,10 +111,10 @@ fun RecipeDetailScreen(
                 }
 
                 // 조리 단계 목록
-                if (recipeDetail.value.steps.isNotEmpty()) {
-                    items(recipeDetail.value.steps.size) { index -> // 단계 번호와 함께 표시
+                if (detailItem.steps.isNotEmpty()) {
+                    items(detailItem.steps.size) { index -> // 단계 번호와 함께 표시
                         Text(
-                            text = "${index + 1}. ${recipeDetail.value.steps[index]}",
+                            text = "${index + 1}. ${detailItem.steps[index]}",
                             fontSize = 16.sp,
                             modifier = Modifier.padding(bottom = 4.dp, start = 8.dp)
                         )
@@ -117,5 +122,16 @@ fun RecipeDetailScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RecipeDetailScreenPreview() {
+    RecipickTheme {
+        RecipeDetailScreen(
+            navController = rememberNavController(),
+            detailItem = RecipeEntity(1, "레시피제목", listOf("양파, 대파"), listOf("1. 재료넣고", "2. 볶기"))
+        )
     }
 }
