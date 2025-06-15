@@ -131,7 +131,7 @@ fun RecipeDetailScreenPreview() {
     RecipickTheme {
         RecipeDetailScreen(
             navController = rememberNavController(),
-            detailItem = RecipeEntity(1, "레시피제목", listOf("양파, 대파"), listOf("1. 재료넣고", "2. 볶기"))
+            detailItem = RecipeEntity(1, "레시피제목", listOf("양파1개, 대파1개"), listOf("재료넣고", "볶기"))
         )
     }
 }
