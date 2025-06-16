@@ -41,7 +41,10 @@ fun AppScreen(
             )
         },
         floatingActionButton = {
-            FloatingButton(onClick)
+            FloatingButton(
+                onClick = onClick,
+                iconString = "add"
+            )
         }
     ) { innerPadding ->
         MainScreen(
