@@ -31,7 +31,7 @@ fun AddRecipeIngredientsScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             MyTopAppBar(
-                title = stringResource(R.string.add_recipe_title),
+                title = stringResource(R.string.add_recipe),
                 true,
                 onBackClick = { navController.popBackStack() }
             )

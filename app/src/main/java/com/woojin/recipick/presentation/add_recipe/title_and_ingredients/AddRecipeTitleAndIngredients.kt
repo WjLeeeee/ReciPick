@@ -123,7 +123,7 @@ fun AddRecipeTitleAndIngredients(
                     onClick = { addIngredientsClick() },
                     modifier = Modifier.align(alignment = Alignment.CenterVertically)
                 ) {
-                    Text(text = "재료 추가")
+                    Text(text = stringResource(R.string.add_recipe))
                 }
             }
 
