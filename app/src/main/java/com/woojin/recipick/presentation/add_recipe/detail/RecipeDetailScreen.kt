@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.data.local.entity.RecipeEntity
+import com.woojin.recipick.presentation.main.components.AlertNoTitleFunc
 import com.woojin.recipick.presentation.main.components.FloatingButton
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
@@ -63,6 +64,13 @@ fun RecipeDetailScreen(
         detailItem.steps,
         isEditMode
     ) { mutableStateOf(detailItem.steps) }
+
+    var showDeleteIngredientDialog by remember { mutableStateOf(false) } //재료 삭제 dialog 표시 여부
+    var showDeleteStepsDialog by remember { mutableStateOf(false) } // 단계 삭제 dialog 표시 여부
+
+    var deleteIngredientIndex by remember { mutableStateOf(-1) } // 삭제 재료 인덱스 저장
+    var deleteStepsIndex by remember { mutableStateOf(-1) } // 삭제 단계 인덱스 저장
+
 
     LaunchedEffect(isEditMode, detailItem) {
         if (isEditMode) {
@@ -148,7 +156,10 @@ fun RecipeDetailScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                onClick = { deleteIngredient(index) }
+                                onClick = {
+                                    deleteIngredientIndex = index
+                                    showDeleteIngredientDialog = true
+                                }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -215,7 +226,10 @@ fun RecipeDetailScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                onClick = { deleteSteps(index) }
+                                onClick = {
+                                    showDeleteStepsDialog = true
+                                    deleteStepsIndex = index
+                                }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -249,6 +263,36 @@ fun RecipeDetailScreen(
                             )
                         }
                     }
+                }
+            }
+
+            when {
+                showDeleteIngredientDialog && deleteIngredientIndex != -1 -> {
+                    AlertNoTitleFunc(
+                        onDismissRequest = {
+                            showDeleteIngredientDialog = false
+                        },
+                        onConfirmation = {
+                            deleteIngredient(deleteIngredientIndex)
+                            deleteIngredientIndex = -1
+                            showDeleteIngredientDialog = false
+                        },
+                        dialogText = R.string.check_delete_item
+                    )
+                }
+
+                showDeleteStepsDialog && deleteStepsIndex !=  -1 -> {
+                    AlertNoTitleFunc(
+                        onDismissRequest = {
+                            showDeleteStepsDialog = false
+                        },
+                        onConfirmation = {
+                            deleteSteps(deleteStepsIndex)
+                            deleteStepsIndex = -1
+                            showDeleteStepsDialog = false
+                        },
+                        dialogText = R.string.check_delete_item
+                    )
                 }
             }
         }
