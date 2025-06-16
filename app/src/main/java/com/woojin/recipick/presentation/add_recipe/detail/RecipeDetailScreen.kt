@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,6 +41,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.data.local.entity.RecipeEntity
+import com.woojin.recipick.presentation.add_recipe.steps.RecipeStep
 import com.woojin.recipick.presentation.main.components.AlertNoTitleFunc
 import com.woojin.recipick.presentation.main.components.FloatingButton
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
@@ -181,6 +185,21 @@ fun RecipeDetailScreen(
                             )
                         }
                     }
+                    item {
+                        // 재료 추가 버튼
+                        OutlinedButton(
+                            onClick = {
+                                val newList = editIngredients.toMutableList()
+                                newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
+                                editIngredients = newList
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "추가 버튼")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.add_recipe))
+                        }
+                    }
                 } else {
                     if (detailItem.ingredients.isNotEmpty()) {
                         items(detailItem.ingredients) { ingredient ->
@@ -250,7 +269,21 @@ fun RecipeDetailScreen(
                                 modifier = Modifier.weight(1f)
                             )
                         }
-
+                    }
+                    item {
+                        // 조리 과정 추가 버튼
+                        OutlinedButton(
+                            onClick = {
+                                val newList = editSteps.toMutableList()
+                                newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
+                                editSteps = newList
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "추가 버튼")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.add_recipe_step_button))
+                        }
                     }
                 } else {
                     // 조리 단계 목록
