@@ -25,7 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
@@ -50,10 +53,31 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun RecipeDetailScreen(
     navController: NavHostController,
+    recipeDetailViewModel: RecipeDetailViewModel = hiltViewModel()
+) {
+    val recipeDetailData by recipeDetailViewModel.recipeDetailData.collectAsState()
+    RecipeDetail(
+        navController = navController,
+        detailItem = recipeDetailData,
+        saveRecipeBtn = { data ->
+            recipeDetailViewModel.updateRecipe(data = data)
+        },
+        deleteIngredient = { index ->
+            recipeDetailViewModel.deleteIngredient(index = index)
+        },
+        deleteSteps = { index ->
+            recipeDetailViewModel.deleteSteps(index = index)
+        }
+    )
+}
+
+@Composable
+fun RecipeDetail(
+    navController: NavHostController,
     detailItem: RecipeEntity,
     saveRecipeBtn: (RecipeEntity) -> Unit,
     deleteIngredient: (Int) -> Unit,
-    deleteSteps: (Int) -> Unit
+    deleteSteps: (Int) -> Unit,
 ) {
     var isEditMode by remember { mutableStateOf(false) }
     var editTitle by remember(
@@ -72,8 +96,8 @@ fun RecipeDetailScreen(
     var showDeleteIngredientDialog by remember { mutableStateOf(false) } //재료 삭제 dialog 표시 여부
     var showDeleteStepsDialog by remember { mutableStateOf(false) } // 단계 삭제 dialog 표시 여부
 
-    var deleteIngredientIndex by remember { mutableStateOf(-1) } // 삭제 재료 인덱스 저장
-    var deleteStepsIndex by remember { mutableStateOf(-1) } // 삭제 단계 인덱스 저장
+    var deleteIngredientIndex by remember { mutableIntStateOf(-1) } // 삭제 재료 인덱스 저장
+    var deleteStepsIndex by remember { mutableIntStateOf(-1) } // 삭제 단계 인덱스 저장
 
 
     LaunchedEffect(isEditMode, detailItem) {
@@ -334,9 +358,9 @@ fun RecipeDetailScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun RecipeDetailScreenPreview() {
+fun RecipeDetailPreview() {
     RecipickTheme {
-        RecipeDetailScreen(
+        RecipeDetail(
             navController = rememberNavController(),
             detailItem = RecipeEntity(1, "레시피제목", listOf("양파1개", "대파1개"), listOf("재료넣고", "볶기")),
             saveRecipeBtn = {},

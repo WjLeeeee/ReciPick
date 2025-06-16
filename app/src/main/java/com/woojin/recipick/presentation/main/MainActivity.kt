@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecipickTheme {
-                val recipeDetailData by recipeDetailViewModel.recipeDetailData.collectAsState()
                 val navController = rememberNavController()
                 LaunchedEffect(key1 = Unit) {
                     viewModel.navigateToScreen.collect { navigation ->
@@ -98,16 +97,6 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.RecipeDetail.route) {
                         RecipeDetailScreen(
                             navController = navController,
-                            detailItem = recipeDetailData,
-                            saveRecipeBtn = { data ->
-                                recipeDetailViewModel.updateRecipe(data)
-                            },
-                            deleteIngredient = { index ->
-                                recipeDetailViewModel.deleteIngredient(index)
-                            },
-                            deleteSteps = { index ->
-                                recipeDetailViewModel.deleteSteps(index)
-                            }
                         )
                     }
                 }
