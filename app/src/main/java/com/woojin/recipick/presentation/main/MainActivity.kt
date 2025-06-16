@@ -95,6 +95,12 @@ class MainActivity : ComponentActivity() {
                             detailItem = recipeDetailData,
                             saveRecipeBtn = { data ->
                                 viewModel.updateRecipe(data)
+                            },
+                            deleteIngredient = { index ->
+                                viewModel.deleteIngredient(index)
+                            },
+                            deleteSteps = { index ->
+                                viewModel.deleteSteps(index)
                             }
                         )
                     }

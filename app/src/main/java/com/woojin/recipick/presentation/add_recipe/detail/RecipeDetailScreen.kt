@@ -1,14 +1,20 @@
 package com.woojin.recipick.presentation.add_recipe.detail
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -20,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -39,7 +46,9 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 fun RecipeDetailScreen(
     navController: NavHostController,
     detailItem: RecipeEntity,
-    saveRecipeBtn: (RecipeEntity) -> Unit
+    saveRecipeBtn: (RecipeEntity) -> Unit,
+    deleteIngredient: (Int) -> Unit,
+    deleteSteps: (Int) -> Unit
 ) {
     var isEditMode by remember { mutableStateOf(false) }
     var editTitle by remember(
@@ -132,16 +141,34 @@ fun RecipeDetailScreen(
                 //재료 목록 수정
                 if (isEditMode) {
                     itemsIndexed(editIngredients) { index, ingredient ->
-                        TextField(
-                            value = ingredient,
-                            onValueChange = { newValue ->
-                                val newList = editIngredients.toMutableList()
-                                newList[index] = newValue
-                                editIngredients = newList
-                            },
-                            label = { Text("${stringResource(R.string.ingredient_label)} ${index + 1}") },
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(
+                                onClick = { deleteIngredient(index) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "삭제 아이콘",
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .size(20.dp),
+                                )
+                            }
+                            TextField(
+                                value = ingredient,
+                                onValueChange = { newValue ->
+                                    val newList = editIngredients.toMutableList()
+                                    newList[index] = newValue
+                                    editIngredients = newList
+                                },
+                                label = { Text("${stringResource(R.string.ingredient_label)} ${index + 1}") },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 } else {
                     if (detailItem.ingredients.isNotEmpty()) {
@@ -181,16 +208,35 @@ fun RecipeDetailScreen(
                 if (isEditMode) {
                     //조리 단계 수정
                     itemsIndexed(editSteps) { index, step ->
-                        TextField(
-                            value = step,
-                            onValueChange = { newValue ->
-                                val newList = editSteps.toMutableList()
-                                newList[index] = newValue
-                                editSteps = newList
-                            },
-                            label = { Text("${stringResource(R.string.step_label)} ${index + 1}") },
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(
+                                onClick = { deleteSteps(index) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "삭제 아이콘",
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .size(20.dp),
+                                )
+                            }
+                            TextField(
+                                value = step,
+                                onValueChange = { newValue ->
+                                    val newList = editSteps.toMutableList()
+                                    newList[index] = newValue
+                                    editSteps = newList
+                                },
+                                label = { Text("${stringResource(R.string.step_label)} ${index + 1}") },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+
                     }
                 } else {
                     // 조리 단계 목록
@@ -215,8 +261,10 @@ fun RecipeDetailScreenPreview() {
     RecipickTheme {
         RecipeDetailScreen(
             navController = rememberNavController(),
-            detailItem = RecipeEntity(1, "레시피제목", listOf("양파1개, 대파1개"), listOf("재료넣고", "볶기")),
-            saveRecipeBtn = {}
+            detailItem = RecipeEntity(1, "레시피제목", listOf("양파1개", "대파1개"), listOf("재료넣고", "볶기")),
+            saveRecipeBtn = {},
+            deleteIngredient = { _ -> },
+            deleteSteps = { _ -> }
         )
     }
 }
