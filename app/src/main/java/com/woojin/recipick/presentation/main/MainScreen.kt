@@ -2,7 +2,6 @@ package com.woojin.recipick.presentation.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,18 +14,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.woojin.recipick.R
+import com.woojin.recipick.presentation.main.components.AlertNoTitleFunc
 import com.woojin.recipick.presentation.main.components.FloatingButton
 import com.woojin.recipick.presentation.main.components.MainItem
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
-import com.woojin.recipick.presentation.theme.RecipickTheme
 
 @Composable
 fun AppScreen(
@@ -50,7 +52,8 @@ fun AppScreen(
         }
     ) { innerPadding ->
         MainScreen(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .background(Color.White),
             viewModel = viewModel
         )
@@ -63,6 +66,8 @@ fun MainScreen(
     viewModel: MainViewModel
 ) {
     val recipesState by viewModel.recipes.collectAsState() //저장된 레시피
+    var showDeleteDialog by remember { mutableStateOf(false) } //삭제 확인 dialog 표시 여부
+    var deleteIndex by remember { mutableIntStateOf(-1) } // 삭제 레시피 index 저장
     when {
         recipesState.isEmpty() -> {
             Text(
@@ -89,10 +94,25 @@ fun MainScreen(
                     MainItem(
                         recipeTitle = recipe.title,
                         onItemClick = { viewModel.recipeDetail(recipe.id) },
-                        onDeleteItemClick = { viewModel.deleteRecipe(recipe.id) }
+                        onDeleteItemClick = {
+                            showDeleteDialog = true
+                            deleteIndex = recipe.id ?: -1
+                        }
                     )
                 }
             }
         }
     }
+    if (showDeleteDialog) {
+        AlertNoTitleFunc(
+            onDismissRequest = { showDeleteDialog = false },
+            onConfirmation = {
+                viewModel.deleteRecipe(deleteIndex)
+                showDeleteDialog = false
+                deleteIndex = -1
+            },
+            dialogText = R.string.check_delete_item
+        )
+    }
+
 }
