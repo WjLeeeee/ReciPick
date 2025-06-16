@@ -24,4 +24,8 @@
     <string name="ingredients_section_title">필요한 재료</string>
     <string name="no_ingredients_message">저장된 재료가 없습니다.</string>
     <string name="steps_section_title">조리 단계</string>
+
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="check_delete_item">해당 아이템을 삭제 하시겠습니까?</string>
 </resources>
