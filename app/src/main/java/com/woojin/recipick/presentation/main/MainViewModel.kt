@@ -10,12 +10,10 @@ import com.woojin.recipick.presentation.add_recipe.state.RecipeInputState
 import com.woojin.recipick.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,9 +29,6 @@ class MainViewModel @Inject constructor(
 
     private val _selectedIngredientName = mutableStateOf<String>("")
     val selectedIngredientName: State<String> = _selectedIngredientName
-
-    private val _recipeDetailData = MutableStateFlow(RecipeEntity(null, "", emptyList(), emptyList()))
-    val recipeDetailData: StateFlow<RecipeEntity> = _recipeDetailData.asStateFlow()
 
     /** 화면 전환 */
     fun navUpdate(value: Screen) {
@@ -90,65 +85,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             recipeId?.let { id ->
                 recipeDao.delete(id)
-            }
-        }
-    }
-
-    /** 레시피 상세 */
-    fun recipeDetail(recipeId: Int?) {
-        viewModelScope.launch {
-            recipeId?.let { id ->
-                recipeDao.getRecipe(id).let { data ->
-                    _recipeDetailData.value =
-                        RecipeEntity(data.id, data.title, data.ingredients, data.steps)
-                }
-                navUpdate(Screen.RecipeDetail)
-            }
-        }
-    }
-
-    /** 수정된 레시피 저장 */
-    fun updateRecipe(data: RecipeEntity) {
-        viewModelScope.launch {
-            recipeDao.updateRecipe(data)
-            _recipeDetailData.value = data
-        }
-    }
-
-    /** 레시피 수정 중 재료 삭제 */
-    fun deleteIngredient(index: Int) {
-        viewModelScope.launch {
-            val currentRecipeIngredients = _recipeDetailData.value
-            //index 가 정상 인지, 리스트 크기 보다 크지 않은지 확인
-            if (index >= 0 && index < currentRecipeIngredients.ingredients.size) {
-                //현재 재료 리스트 에서 해당 index 재료 제거 후 저장
-                val updatedIngredients = currentRecipeIngredients.ingredients.toMutableList()
-                updatedIngredients.removeAt(index)
-                val newRecipeData = currentRecipeIngredients.copy(
-                    ingredients = updatedIngredients.toList()
-                )
-                //새롭게 저장된 리스트 적용
-                _recipeDetailData.value = newRecipeData
-                recipeDao.updateRecipe(newRecipeData)
-            }
-        }
-    }
-
-    /** 레시피 수정 중 조리 과정 삭제 */
-    fun deleteSteps(index: Int) {
-        viewModelScope.launch {
-            val currentRecipeSteps = _recipeDetailData.value
-            //index 가 정상 인지, 리스트 크기 보다 크지 않은지 확인
-            if (index >= 0 && index < currentRecipeSteps.steps.size) {
-                //현재 재료 리스트 에서 해당 index 재료 제거 후 저장
-                val updatedSteps = currentRecipeSteps.steps.toMutableList()
-                updatedSteps.removeAt(index)
-                val newRecipeData = currentRecipeSteps.copy(
-                    steps = updatedSteps.toList()
-                )
-                //새롭게 저장된 리스트 적용
-                _recipeDetailData.value = newRecipeData
-                recipeDao.updateRecipe(newRecipeData)
             }
         }
     }

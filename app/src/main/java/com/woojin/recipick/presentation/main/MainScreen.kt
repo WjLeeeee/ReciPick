@@ -33,7 +33,8 @@ import com.woojin.recipick.presentation.main.components.MyTopAppBar
 @Composable
 fun AppScreen(
     viewModel: MainViewModel,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    mainItemClick: (Int) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -55,7 +56,8 @@ fun AppScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .background(Color.White),
-            viewModel = viewModel
+            viewModel = viewModel,
+            mainItemClick = { recipeId -> mainItemClick(recipeId) }
         )
     }
 }
@@ -63,7 +65,8 @@ fun AppScreen(
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    mainItemClick: (Int) -> Unit
 ) {
     val recipesState by viewModel.recipes.collectAsState() //저장된 레시피
     var showDeleteDialog by remember { mutableStateOf(false) } //삭제 확인 dialog 표시 여부
@@ -93,7 +96,7 @@ fun MainScreen(
                 ) { recipe ->
                     MainItem(
                         recipeTitle = recipe.title,
-                        onItemClick = { viewModel.recipeDetail(recipe.id) },
+                        onItemClick = { recipe.id?.let(mainItemClick) },
                         onDeleteItemClick = {
                             showDeleteDialog = true
                             deleteIndex = recipe.id ?: -1

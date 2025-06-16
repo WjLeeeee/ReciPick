@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.presentation.add_recipe.detail.RecipeDetailScreen
+import com.woojin.recipick.presentation.add_recipe.detail.RecipeDetailViewModel
 import com.woojin.recipick.presentation.add_recipe.ingredients.AddRecipeIngredientsScreen
 import com.woojin.recipick.presentation.add_recipe.steps.AddRecipeStepsScreen
 import com.woojin.recipick.presentation.add_recipe.title_and_ingredients.AddRecipeTitleAndIngredients
@@ -23,13 +24,14 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private val recipeDetailViewModel: RecipeDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             RecipickTheme {
-                val recipeDetailData by viewModel.recipeDetailData.collectAsState()
+                val recipeDetailData by recipeDetailViewModel.recipeDetailData.collectAsState()
                 val navController = rememberNavController()
                 LaunchedEffect(key1 = Unit) {
                     viewModel.navigateToScreen.collect { navigation ->
@@ -54,7 +56,11 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.Main.route) {
                         AppScreen(
                             viewModel = viewModel,
-                            onClick = { viewModel.navUpdate(Screen.AddRecipeTitleAndIngredients) }
+                            onClick = { viewModel.navUpdate(Screen.AddRecipeTitleAndIngredients) },
+                            mainItemClick = { recipeId ->
+                                recipeDetailViewModel.recipeDetail(recipeId)
+                                viewModel.navUpdate(Screen.RecipeDetail)
+                            }
                         )
                     }
 
@@ -94,13 +100,13 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             detailItem = recipeDetailData,
                             saveRecipeBtn = { data ->
-                                viewModel.updateRecipe(data)
+                                recipeDetailViewModel.updateRecipe(data)
                             },
                             deleteIngredient = { index ->
-                                viewModel.deleteIngredient(index)
+                                recipeDetailViewModel.deleteIngredient(index)
                             },
                             deleteSteps = { index ->
-                                viewModel.deleteSteps(index)
+                                recipeDetailViewModel.deleteSteps(index)
                             }
                         )
                     }
