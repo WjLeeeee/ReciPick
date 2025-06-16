@@ -71,7 +71,7 @@ fun MainScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "저장된 레시피가 없습니다.\n새로운 레시피를 추가해보세요!",
+                    text = stringResource(R.string.no_saved_recipes),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(16.dp)
                 )

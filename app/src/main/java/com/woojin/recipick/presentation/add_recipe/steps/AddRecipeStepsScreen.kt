@@ -49,7 +49,7 @@ fun AddRecipeStepsScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             MyTopAppBar(
-                title = stringResource(R.string.add_recipe_title),
+                title = stringResource(R.string.recipe_steps),
                 true,
                 onBackClick = { navController.popBackStack() }
             )
@@ -92,7 +92,7 @@ fun AddRecipeStepsScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_recipe_step_button))
+                        Icon(Icons.Filled.Add, contentDescription = "추가 버튼")
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.add_recipe_step_button))
                     }
