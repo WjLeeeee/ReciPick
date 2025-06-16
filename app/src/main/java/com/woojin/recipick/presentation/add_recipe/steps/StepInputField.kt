@@ -42,7 +42,7 @@ fun StepInputField(
         IconButton(onClick = onDeleteClick) {
             Icon(
                 imageVector = Icons.Filled.Delete,
-                contentDescription = stringResource(stepNumber, "조리 과정 삭제"),
+                contentDescription = "조리 과정 삭제",
             )
         }
     }
