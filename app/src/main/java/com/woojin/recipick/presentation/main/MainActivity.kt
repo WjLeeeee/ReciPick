@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecipickTheme {
+                val recipeDetailData by viewModel.recipeDetailData.collectAsState()
                 val navController = rememberNavController()
                 LaunchedEffect(key1 = Unit) {
                     viewModel.navigateToScreen.collect { navigation ->
@@ -90,7 +92,10 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.RecipeDetail.route) {
                         RecipeDetailScreen(
                             navController = navController,
-                            detailItem = viewModel.recipeDetailData
+                            detailItem = recipeDetailData,
+                            saveRecipeBtn = { data ->
+                                viewModel.updateRecipe(data)
+                            }
                         )
                     }
                 }

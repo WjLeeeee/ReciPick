@@ -3,6 +3,7 @@ package com.woojin.recipick.data.local.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.woojin.recipick.data.local.entity.RecipeEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -19,4 +20,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM RecipeTable ORDER BY id DESC")
     fun getAll(): Flow<List<RecipeEntity>>
+
+    @Update
+    suspend fun updateRecipe(recipe: RecipeEntity)
 }
