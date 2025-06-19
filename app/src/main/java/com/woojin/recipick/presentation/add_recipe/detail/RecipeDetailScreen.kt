@@ -39,12 +39,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.data.local.entity.RecipeEntity
-import com.woojin.recipick.presentation.add_recipe.steps.RecipeStep
 import com.woojin.recipick.presentation.main.components.AlertNoTitleFunc
 import com.woojin.recipick.presentation.main.components.FloatingButton
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
@@ -53,12 +51,12 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun RecipeDetailScreen(
     navController: NavHostController,
-    recipeDetailViewModel: RecipeDetailViewModel = hiltViewModel()
+    recipeDetailViewModel: RecipeDetailViewModel
 ) {
-    val recipeDetailData by recipeDetailViewModel.recipeDetailData.collectAsState()
+    val recipeDetailData by recipeDetailViewModel.uiState.collectAsState()
     RecipeDetail(
         navController = navController,
-        detailItem = recipeDetailData,
+        recipeDetailUiState = recipeDetailData,
         saveRecipeBtn = { data ->
             recipeDetailViewModel.updateRecipe(data = data)
         },
@@ -74,24 +72,24 @@ fun RecipeDetailScreen(
 @Composable
 fun RecipeDetail(
     navController: NavHostController,
-    detailItem: RecipeEntity,
+    recipeDetailUiState: RecipeDetailUiState,
     saveRecipeBtn: (RecipeEntity) -> Unit,
     deleteIngredient: (Int) -> Unit,
     deleteSteps: (Int) -> Unit,
 ) {
     var isEditMode by remember { mutableStateOf(false) }
     var editTitle by remember(
-        detailItem.title,
+        recipeDetailUiState.recipeEntity.title,
         isEditMode
-    ) { mutableStateOf(detailItem.title) }
+    ) { mutableStateOf(recipeDetailUiState.recipeEntity.title) }
     var editIngredients by remember(
-        detailItem.ingredients,
+        recipeDetailUiState.recipeEntity.ingredients,
         isEditMode
-    ) { mutableStateOf(detailItem.ingredients) }
+    ) { mutableStateOf(recipeDetailUiState.recipeEntity.ingredients) }
     var editSteps by remember(
-        detailItem.steps,
+        recipeDetailUiState.recipeEntity.steps,
         isEditMode
-    ) { mutableStateOf(detailItem.steps) }
+    ) { mutableStateOf(recipeDetailUiState.recipeEntity.steps) }
 
     var showDeleteIngredientDialog by remember { mutableStateOf(false) } //재료 삭제 dialog 표시 여부
     var showDeleteStepsDialog by remember { mutableStateOf(false) } // 단계 삭제 dialog 표시 여부
@@ -100,11 +98,11 @@ fun RecipeDetail(
     var deleteStepsIndex by remember { mutableIntStateOf(-1) } // 삭제 단계 인덱스 저장
 
 
-    LaunchedEffect(isEditMode, detailItem) {
+    LaunchedEffect(isEditMode, recipeDetailUiState.recipeEntity) {
         if (isEditMode) {
-            editTitle = detailItem.title
-            editIngredients = detailItem.ingredients.toMutableList()
-            editSteps = detailItem.steps.toMutableList()
+            editTitle = recipeDetailUiState.recipeEntity.title
+            editIngredients = recipeDetailUiState.recipeEntity.ingredients.toMutableList()
+            editSteps = recipeDetailUiState.recipeEntity.steps.toMutableList()
         }
     }
     Scaffold(
@@ -125,7 +123,7 @@ fun RecipeDetail(
                     isEditMode = !isEditMode
                     if (!isEditMode) {
                         saveRecipeBtn(
-                            RecipeEntity(detailItem.id, editTitle, editIngredients, editSteps)
+                            RecipeEntity(recipeDetailUiState.recipeEntity.id, editTitle, editIngredients, editSteps)
                         )
                     }
                 },
@@ -156,7 +154,7 @@ fun RecipeDetail(
                         )
                     } else {
                         Text(
-                            text = detailItem.title,
+                            text = recipeDetailUiState.recipeEntity.title,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 16.dp)
@@ -225,8 +223,8 @@ fun RecipeDetail(
                         }
                     }
                 } else {
-                    if (detailItem.ingredients.isNotEmpty()) {
-                        items(detailItem.ingredients) { ingredient ->
+                    if (recipeDetailUiState.recipeEntity.ingredients.isNotEmpty()) {
+                        items(recipeDetailUiState.recipeEntity.ingredients) { ingredient ->
                             Text(
                                 text = "- $ingredient",
                                 fontSize = 16.sp,
@@ -311,10 +309,10 @@ fun RecipeDetail(
                     }
                 } else {
                     // 조리 단계 목록
-                    if (detailItem.steps.isNotEmpty()) {
-                        items(detailItem.steps.size) { index -> // 단계 번호와 함께 표시
+                    if (recipeDetailUiState.recipeEntity.steps.isNotEmpty()) {
+                        items(recipeDetailUiState.recipeEntity.steps.size) { index -> // 단계 번호와 함께 표시
                             Text(
-                                text = "${index + 1}. ${detailItem.steps[index]}",
+                                text = "${index + 1}. ${recipeDetailUiState.recipeEntity.steps[index]}",
                                 fontSize = 16.sp,
                                 modifier = Modifier.padding(bottom = 4.dp, start = 8.dp)
                             )
@@ -362,7 +360,9 @@ fun RecipeDetailPreview() {
     RecipickTheme {
         RecipeDetail(
             navController = rememberNavController(),
-            detailItem = RecipeEntity(1, "레시피제목", listOf("양파1개", "대파1개"), listOf("재료넣고", "볶기")),
+            recipeDetailUiState = RecipeDetailUiState(
+                recipeEntity = RecipeEntity(1, "레시피제목", listOf("양파1개", "대파1개"), listOf("재료넣고", "볶기"))
+            ),
             saveRecipeBtn = {},
             deleteIngredient = { _ -> },
             deleteSteps = { _ -> }
