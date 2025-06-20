@@ -27,7 +27,8 @@ class RecipeDetailViewModel @Inject constructor(
                 recipeDao.getRecipe(id).let { data ->
                     _uiState.update {
                         it.copy(
-                            recipeEntity = data
+                            recipeEntity = data,
+                            editTitle = data.title
                         )
                     }
                 }
@@ -41,7 +42,8 @@ class RecipeDetailViewModel @Inject constructor(
             recipeDao.updateRecipe(data)
             _uiState.update {
                 it.copy(
-                    recipeEntity = data
+                    recipeEntity = data,
+                    editTitle = data.title
                 )
             }
         }
@@ -99,6 +101,17 @@ class RecipeDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isEditMode = mode
+                )
+            }
+        }
+    }
+
+    /** 레시피 타이틀 수정 update */
+    fun updateEditTitle(updateTitle: String) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    editTitle = updateTitle
                 )
             }
         }

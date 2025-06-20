@@ -67,7 +67,9 @@ fun RecipeDetailScreen(
             recipeDetailViewModel.deleteSteps(index = index)
         },
         isEditMode = recipeDetailData.isEditMode,
-        updateEditMode = { recipeDetailViewModel.updateEditMode(it) }
+        updateEditMode = { recipeDetailViewModel.updateEditMode(it) },
+        editTitle = recipeDetailData.editTitle,
+        updateEditTitle = { recipeDetailViewModel.updateEditTitle(it) }
     )
 }
 
@@ -80,11 +82,9 @@ fun RecipeDetail(
     deleteSteps: (Int) -> Unit,
     isEditMode: Boolean,
     updateEditMode: (Boolean) -> Unit,
+    editTitle: String,
+    updateEditTitle: (String) -> Unit,
 ) {
-    var editTitle by remember(
-        recipeDetailUiState.recipeEntity.title,
-        isEditMode
-    ) { mutableStateOf(recipeDetailUiState.recipeEntity.title) }
     var editIngredients by remember(
         recipeDetailUiState.recipeEntity.ingredients,
         isEditMode
@@ -103,7 +103,6 @@ fun RecipeDetail(
 
     LaunchedEffect(isEditMode, recipeDetailUiState.recipeEntity) {
         if (isEditMode) {
-            editTitle = recipeDetailUiState.recipeEntity.title
             editIngredients = recipeDetailUiState.recipeEntity.ingredients.toMutableList()
             editSteps = recipeDetailUiState.recipeEntity.steps.toMutableList()
         }
@@ -151,7 +150,7 @@ fun RecipeDetail(
                     if (isEditMode) {
                         OutlinedTextField(
                             value = editTitle,
-                            onValueChange = { editTitle = it },
+                            onValueChange = { updateEditTitle(it) },
                             label = { Text(stringResource(R.string.recipe_title_edit_text)) },
                             singleLine = true,
                         )
@@ -370,7 +369,9 @@ fun RecipeDetailPreview() {
             deleteIngredient = { _ -> },
             deleteSteps = { _ -> },
             isEditMode = true,
-            updateEditMode = {}
+            updateEditMode = {},
+            editTitle = "레시피 제목 수정중",
+            updateEditTitle = {}
         )
     }
 }
