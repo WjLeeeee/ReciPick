@@ -63,8 +63,8 @@ fun RecipeDetailScreen(
         deleteIngredient = { index ->
             recipeDetailViewModel.deleteIngredient(index = index)
         },
-        deleteSteps = { index ->
-            recipeDetailViewModel.deleteSteps(index = index)
+        deleteStep = { index ->
+            recipeDetailViewModel.deleteStep(index = index)
         },
         isEditMode = recipeDetailData.isEditMode,
         updateEditMode = { recipeDetailViewModel.updateEditMode(it) },
@@ -83,7 +83,7 @@ fun RecipeDetail(
     recipeDetailUiState: RecipeDetailUiState,
     saveRecipeBtn: (RecipeEntity) -> Unit,
     deleteIngredient: (Int) -> Unit,
-    deleteSteps: (Int) -> Unit,
+    deleteStep: (Int) -> Unit,
     isEditMode: Boolean,
     updateEditMode: (Boolean) -> Unit,
     editTitle: String,
@@ -338,7 +338,7 @@ fun RecipeDetail(
                             showDeleteStepsDialog = false
                         },
                         onConfirmation = {
-                            deleteSteps(deleteStepsIndex)
+                            deleteStep(deleteStepsIndex)
                             deleteStepsIndex = -1
                             showDeleteStepsDialog = false
                         },
@@ -361,7 +361,7 @@ fun RecipeDetailPreview() {
             ),
             saveRecipeBtn = {},
             deleteIngredient = { _ -> },
-            deleteSteps = { _ -> },
+            deleteStep = { _ -> },
             isEditMode = true,
             updateEditMode = {},
             editTitle = "레시피 제목 수정중",

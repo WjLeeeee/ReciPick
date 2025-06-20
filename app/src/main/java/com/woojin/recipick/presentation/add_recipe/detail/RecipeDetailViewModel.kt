@@ -77,7 +77,7 @@ class RecipeDetailViewModel @Inject constructor(
     }
 
     /** 레시피 수정 중 조리 과정 삭제 */
-    fun deleteSteps(index: Int) {
+    fun deleteStep(index: Int) {
         viewModelScope.launch {
             val afterDeleteData = deleteStepUseCase(
                 index = index,
