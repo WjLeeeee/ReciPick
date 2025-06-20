@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woojin.recipick.data.local.dao.RecipeDao
 import com.woojin.recipick.data.local.entity.RecipeEntity
+import com.woojin.recipick.domain.usecase.DeleteIngredientUseCase
 import com.woojin.recipick.domain.usecase.GetRecipeUseCase
 import com.woojin.recipick.domain.usecase.UpdateRecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class RecipeDetailViewModel @Inject constructor(
     private val getRecipeUseCase: GetRecipeUseCase,
     private val updateRecipeUseCase: UpdateRecipeUseCase,
+    private val deleteIngredientUseCase: DeleteIngredientUseCase,
     private val recipeDao: RecipeDao
 ) : ViewModel() {
 
@@ -59,23 +61,15 @@ class RecipeDetailViewModel @Inject constructor(
     /** 레시피 수정 중 재료 삭제 */
     fun deleteIngredient(index: Int) {
         viewModelScope.launch {
-            val currentRecipeIngredients = _uiState.value.recipeEntity
-            //index 가 정상 인지, 리스트 크기 보다 크지 않은지 확인
-            if (index >= 0 && index < currentRecipeIngredients.ingredients.size) {
-                //현재 재료 리스트 에서 해당 index 재료 제거 후 저장
-                val updatedIngredients = currentRecipeIngredients.ingredients.toMutableList()
-                updatedIngredients.removeAt(index)
-                val newRecipeData = currentRecipeIngredients.copy(
-                    ingredients = updatedIngredients.toList()
+            val afterDeleteData = deleteIngredientUseCase(
+                index = index,
+                data = _uiState.value.recipeEntity
+            )
+            _uiState.update {
+                it.copy(
+                    recipeEntity = afterDeleteData,
+                    editIngredients = afterDeleteData.ingredients
                 )
-                //새롭게 저장된 리스트 적용
-                _uiState.update {
-                    it.copy(
-                        recipeEntity = newRecipeData,
-                        editIngredients = newRecipeData.ingredients
-                    )
-                }
-                recipeDao.updateRecipe(newRecipeData)
             }
         }
     }

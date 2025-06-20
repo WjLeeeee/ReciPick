@@ -19,4 +19,21 @@ class RecipeRepositoryImpl @Inject constructor(
     ) {
         recipeDao.updateRecipe(data)
     }
+
+    override suspend fun deleteIngredient(
+        index: Int,
+        data: RecipeEntity
+    ): RecipeEntity {
+        val currentIngredients = data.ingredients
+        if (index >= 0 && index < currentIngredients.size) {
+            val updateIngredients = currentIngredients.toMutableList()
+            updateIngredients.removeAt(index)
+            val newRecipeData = data.copy(
+                ingredients = updateIngredients.toList()
+            )
+            recipeDao.updateRecipe(newRecipeData)
+            return newRecipeData
+        }
+        return data
+    }
 }
