@@ -39,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
 import com.woojin.recipick.presentation.main.components.MyTopAppBar
 import com.woojin.recipick.presentation.theme.RecipickTheme
+import com.woojin.recipick.utils.Utils
 
 @Composable
 fun AddRecipeTitleAndIngredients(
@@ -53,7 +54,7 @@ fun AddRecipeTitleAndIngredients(
 
     var ingredientName by remember { mutableStateOf("") } //재료 이름
     var selectedUnit by remember { mutableStateOf("g") } //선택된 단위
-    var quantityTotal by remember { mutableStateOf(0f) } //선택된 재료 양
+    var quantityTotal by remember { mutableStateOf(Fraction(0,1)) } //선택된 재료 양
 
     // String 목록을 저장하고 복원하기 위한 Saver 정의
     val listSaver = listSaver<MutableList<String>, String>(
@@ -70,11 +71,11 @@ fun AddRecipeTitleAndIngredients(
     }
 
     val unitOptions = listOf("개", "g", "스푼", "컵")
-    val unitQuantities = when (selectedUnit) {
-        "개" -> listOf(0.5f, 1f, 2f)
-        "g" -> listOf(50f, 100f, 600f)
-        "스푼" -> listOf(0.3f, 0.5f, 1f)
-        "컵" -> listOf(0.3f, 0.5f, 1f)
+    val unitQuantities: List<Fraction> = when (selectedUnit) {
+        "개" -> listOf(Fraction(1,2), Fraction(1,1), Fraction(2,1))
+        "g" -> listOf(Fraction(50,1), Fraction(100,1), Fraction(600,1))
+        "스푼" -> listOf(Fraction(1,3), Fraction(1,2), Fraction(1,1))
+        "컵" -> listOf(Fraction(1,3), Fraction(1,2), Fraction(1,1))
         else -> emptyList()
     }
 
@@ -138,7 +139,7 @@ fun AddRecipeTitleAndIngredients(
                         selected = selectedUnit == unit,
                         onClick = {
                             selectedUnit = unit
-                            quantityTotal = 0f
+                            quantityTotal = Fraction(0,1)
                         },
                         label = { Text(unit) }
                     )
@@ -153,22 +154,19 @@ fun AddRecipeTitleAndIngredients(
                     Button(
                         onClick = {
                             if (ingredientName.isNotBlank()) {
-                                quantityTotal += q
+                                quantityTotal = Utils.addFractions(quantityTotal, q)
                             }
                         }
                     ) {
-                        Text(
-                            if (q < 1f) "${(q * 10).toInt()}/10"
-                            else q.toInt().toString()
-                        )
+                        Text(q.toString())
                     }
                 }
             }
 
             // 현재 선택된 양 표시
-            if (quantityTotal > 0) {
+            if (quantityTotal.numerator > 0) {
                 Text(
-                    text = "현재: ${if (selectedUnit in listOf("스푼", "컵")) quantityTotal.toString() else quantityTotal.toInt()}$selectedUnit",
+                    text = "현재: ${quantityTotal}$selectedUnit",
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -176,13 +174,12 @@ fun AddRecipeTitleAndIngredients(
             // 추가 버튼
             Button(
                 onClick = {
-                    if (ingredientName.isNotBlank() && quantityTotal > 0) {
-                        val displayQuantity =
-                            if (selectedUnit in listOf("스푼", "컵")) quantityTotal.toString() else quantityTotal.toInt().toString()
+                    if (ingredientName.isNotBlank() && quantityTotal.numerator > 0) {
+                        val displayQuantity = quantityTotal.toString()
                         val item = "$ingredientName ${displayQuantity}${selectedUnit}"
                         addedIngredients.add(item)
                         ingredientName = ""
-                        quantityTotal = 0f
+                        quantityTotal = Fraction(0, 1)
                     } else {
                         Toast.makeText(context, R.string.put_ingredient_and_quantity, Toast.LENGTH_SHORT).show()
                     }
