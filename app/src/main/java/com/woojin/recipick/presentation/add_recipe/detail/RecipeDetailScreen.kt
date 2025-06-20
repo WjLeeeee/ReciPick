@@ -75,10 +75,10 @@ fun RecipeDetailScreen(
         updateEditSteps = { recipeDetailViewModel.updateEditSteps(it) },
         deleteIngredientDialog = recipeDetailData.showDeleteIngredientDialog,
         deleteIngredientIndex = recipeDetailData.deleteIngredientIndex,
-        updateDeleteIngredient = { recipeDetailViewModel.updateDeleteIngredientDialog(it) },
+        updateDeleteIngredientDialog = { recipeDetailViewModel.updateDeleteIngredientDialog(it) },
         deleteStepDialog = recipeDetailData.showDeleteStepDialog,
         deleteStepIndex = recipeDetailData.deleteStepIndex,
-        updateDeleteStep = { recipeDetailViewModel.updateDeleteStepDialog(it) },
+        updateDeleteStepDialog = { recipeDetailViewModel.updateDeleteStepDialog(it) },
     )
 }
 
@@ -99,10 +99,10 @@ fun RecipeDetail(
     updateEditSteps: (List<String>) -> Unit,
     deleteIngredientDialog: Boolean,
     deleteIngredientIndex: Int,
-    updateDeleteIngredient: (Pair<Boolean, Int>) -> Unit,
+    updateDeleteIngredientDialog: (Pair<Boolean, Int>) -> Unit,
     deleteStepDialog: Boolean,
     deleteStepIndex: Int,
-    updateDeleteStep: (Pair<Boolean, Int>) -> Unit
+    updateDeleteStepDialog: (Pair<Boolean, Int>) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -181,7 +181,7 @@ fun RecipeDetail(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                onClick = { updateDeleteIngredient(Pair(true, index)) }
+                                onClick = { updateDeleteIngredientDialog(Pair(true, index)) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -263,7 +263,7 @@ fun RecipeDetail(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                onClick = { updateDeleteStep(Pair(true, index)) }
+                                onClick = { updateDeleteStepDialog(Pair(true, index)) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -317,10 +317,10 @@ fun RecipeDetail(
             when {
                 deleteIngredientDialog && deleteIngredientIndex != -1 -> {
                     AlertNoTitleFunc(
-                        onDismissRequest = { updateDeleteIngredient(Pair(false, -1)) },
+                        onDismissRequest = { updateDeleteIngredientDialog(Pair(false, -1)) },
                         onConfirmation = {
                             deleteIngredient(deleteIngredientIndex)
-                            updateDeleteIngredient(Pair(false, -1))
+                            updateDeleteIngredientDialog(Pair(false, -1))
                         },
                         dialogText = R.string.check_delete_item
                     )
@@ -328,10 +328,10 @@ fun RecipeDetail(
 
                 deleteStepDialog && deleteStepIndex !=  -1 -> {
                     AlertNoTitleFunc(
-                        onDismissRequest = { updateDeleteStep(Pair(false, -1)) },
+                        onDismissRequest = { updateDeleteStepDialog(Pair(false, -1)) },
                         onConfirmation = {
                             deleteStep(deleteStepIndex)
-                            updateDeleteStep(Pair(false, -1))
+                            updateDeleteStepDialog(Pair(false, -1))
                         },
                         dialogText = R.string.check_delete_item
                     )
@@ -363,10 +363,10 @@ fun RecipeDetailPreview() {
             updateEditSteps = {},
             deleteIngredientDialog = false,
             deleteIngredientIndex = -1,
-            updateDeleteIngredient = {},
+            updateDeleteIngredientDialog = {},
             deleteStepDialog = false,
             deleteStepIndex = -1,
-            updateDeleteStep = {}
+            updateDeleteStepDialog = {}
         )
     }
 }
