@@ -28,7 +28,8 @@ class RecipeDetailViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             recipeEntity = data,
-                            editTitle = data.title
+                            editTitle = data.title,
+                            editIngredients = data.ingredients
                         )
                     }
                 }
@@ -43,7 +44,8 @@ class RecipeDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     recipeEntity = data,
-                    editTitle = data.title
+                    editTitle = data.title,
+                    editIngredients = data.ingredients
                 )
             }
         }
@@ -112,6 +114,17 @@ class RecipeDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     editTitle = updateTitle
+                )
+            }
+        }
+    }
+
+    /** 레시피 재료 수정 */
+    fun updateEditIngredients(updateIngredients: List<String>) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    editIngredients = updateIngredients
                 )
             }
         }

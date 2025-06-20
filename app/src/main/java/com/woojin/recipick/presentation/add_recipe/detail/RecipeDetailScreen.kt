@@ -69,7 +69,9 @@ fun RecipeDetailScreen(
         isEditMode = recipeDetailData.isEditMode,
         updateEditMode = { recipeDetailViewModel.updateEditMode(it) },
         editTitle = recipeDetailData.editTitle,
-        updateEditTitle = { recipeDetailViewModel.updateEditTitle(it) }
+        updateEditTitle = { recipeDetailViewModel.updateEditTitle(it) },
+        editIngredient = recipeDetailData.editIngredients,
+        updateEditIngredients = { recipeDetailViewModel.updateEditIngredients(it) }
     )
 }
 
@@ -84,11 +86,9 @@ fun RecipeDetail(
     updateEditMode: (Boolean) -> Unit,
     editTitle: String,
     updateEditTitle: (String) -> Unit,
+    editIngredient: List<String>,
+    updateEditIngredients: (List<String>) -> Unit
 ) {
-    var editIngredients by remember(
-        recipeDetailUiState.recipeEntity.ingredients,
-        isEditMode
-    ) { mutableStateOf(recipeDetailUiState.recipeEntity.ingredients) }
     var editSteps by remember(
         recipeDetailUiState.recipeEntity.steps,
         isEditMode
@@ -103,7 +103,6 @@ fun RecipeDetail(
 
     LaunchedEffect(isEditMode, recipeDetailUiState.recipeEntity) {
         if (isEditMode) {
-            editIngredients = recipeDetailUiState.recipeEntity.ingredients.toMutableList()
             editSteps = recipeDetailUiState.recipeEntity.steps.toMutableList()
         }
     }
@@ -124,7 +123,7 @@ fun RecipeDetail(
                 onClick = {
                     if (isEditMode) {
                         saveRecipeBtn(
-                            RecipeEntity(recipeDetailUiState.recipeEntity.id, editTitle, editIngredients, editSteps)
+                            RecipeEntity(recipeDetailUiState.recipeEntity.id, editTitle, editIngredient, editSteps)
                         )
                     }
                     updateEditMode(!isEditMode)
@@ -176,7 +175,7 @@ fun RecipeDetail(
 
                 //재료 목록 수정
                 if (isEditMode) {
-                    itemsIndexed(editIngredients) { index, ingredient ->
+                    itemsIndexed(editIngredient) { index, ingredient ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -200,9 +199,9 @@ fun RecipeDetail(
                             TextField(
                                 value = ingredient,
                                 onValueChange = { newValue ->
-                                    val newList = editIngredients.toMutableList()
+                                    val newList = editIngredient.toMutableList()
                                     newList[index] = newValue
-                                    editIngredients = newList
+                                    updateEditIngredients(newList)
                                 },
                                 label = { Text("${stringResource(R.string.ingredient_label)} ${index + 1}") },
                                 modifier = Modifier.weight(1f)
@@ -213,9 +212,9 @@ fun RecipeDetail(
                         // 재료 추가 버튼
                         OutlinedButton(
                             onClick = {
-                                val newList = editIngredients.toMutableList()
+                                val newList = editIngredient.toMutableList()
                                 newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
-                                editIngredients = newList
+                                updateEditIngredients(newList)
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -371,7 +370,9 @@ fun RecipeDetailPreview() {
             isEditMode = true,
             updateEditMode = {},
             editTitle = "레시피 제목 수정중",
-            updateEditTitle = {}
+            updateEditTitle = {},
+            editIngredient = listOf("양파1개 수정중이지롱", "대파1개"),
+            updateEditIngredients = {}
         )
     }
 }
