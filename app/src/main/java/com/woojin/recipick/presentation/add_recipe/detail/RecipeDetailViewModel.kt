@@ -21,8 +21,7 @@ class RecipeDetailViewModel @Inject constructor(
     private val getRecipeUseCase: GetRecipeUseCase,
     private val updateRecipeUseCase: UpdateRecipeUseCase,
     private val deleteIngredientUseCase: DeleteIngredientUseCase,
-    private val deleteStepUseCase: DeleteStepUseCase,
-    private val recipeDao: RecipeDao
+    private val deleteStepUseCase: DeleteStepUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecipeDetailUiState())
