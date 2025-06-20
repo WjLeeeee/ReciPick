@@ -7,5 +7,5 @@ data class RecipeDetailUiState(
     val recipeEntity: RecipeEntity = RecipeEntity(null, "", emptyList(), emptyList()),
     val editTitle: String = recipeEntity.title,
     val editIngredients: List<String> = recipeEntity.ingredients,
-//    val editSteps: List<String> = recipeEntity.steps,
+    val editSteps: List<String> = recipeEntity.steps,
 )

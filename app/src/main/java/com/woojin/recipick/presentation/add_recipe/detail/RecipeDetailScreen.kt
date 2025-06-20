@@ -71,7 +71,9 @@ fun RecipeDetailScreen(
         editTitle = recipeDetailData.editTitle,
         updateEditTitle = { recipeDetailViewModel.updateEditTitle(it) },
         editIngredient = recipeDetailData.editIngredients,
-        updateEditIngredients = { recipeDetailViewModel.updateEditIngredients(it) }
+        updateEditIngredients = { recipeDetailViewModel.updateEditIngredients(it) },
+        editSteps = recipeDetailData.editSteps,
+        updateEditSteps = { recipeDetailViewModel.updateEditSteps(it) }
     )
 }
 
@@ -87,12 +89,10 @@ fun RecipeDetail(
     editTitle: String,
     updateEditTitle: (String) -> Unit,
     editIngredient: List<String>,
-    updateEditIngredients: (List<String>) -> Unit
+    updateEditIngredients: (List<String>) -> Unit,
+    editSteps: List<String>,
+    updateEditSteps: (List<String>) -> Unit
 ) {
-    var editSteps by remember(
-        recipeDetailUiState.recipeEntity.steps,
-        isEditMode
-    ) { mutableStateOf(recipeDetailUiState.recipeEntity.steps) }
 
     var showDeleteIngredientDialog by remember { mutableStateOf(false) } //재료 삭제 dialog 표시 여부
     var showDeleteStepsDialog by remember { mutableStateOf(false) } // 단계 삭제 dialog 표시 여부
@@ -101,11 +101,6 @@ fun RecipeDetail(
     var deleteStepsIndex by remember { mutableIntStateOf(-1) } // 삭제 단계 인덱스 저장
 
 
-    LaunchedEffect(isEditMode, recipeDetailUiState.recipeEntity) {
-        if (isEditMode) {
-            editSteps = recipeDetailUiState.recipeEntity.steps.toMutableList()
-        }
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -286,7 +281,7 @@ fun RecipeDetail(
                                 onValueChange = { newValue ->
                                     val newList = editSteps.toMutableList()
                                     newList[index] = newValue
-                                    editSteps = newList
+                                    updateEditSteps(newList)
                                 },
                                 label = { Text("${stringResource(R.string.step_label)} ${index + 1}") },
                                 modifier = Modifier.weight(1f)
@@ -299,7 +294,7 @@ fun RecipeDetail(
                             onClick = {
                                 val newList = editSteps.toMutableList()
                                 newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
-                                editSteps = newList
+                                updateEditSteps(newList)
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -372,7 +367,9 @@ fun RecipeDetailPreview() {
             editTitle = "레시피 제목 수정중",
             updateEditTitle = {},
             editIngredient = listOf("양파1개 수정중이지롱", "대파1개"),
-            updateEditIngredients = {}
+            updateEditIngredients = {},
+            editSteps = listOf("재료넣고 수정하자 수정수정", "볶기"),
+            updateEditSteps = {}
         )
     }
 }
