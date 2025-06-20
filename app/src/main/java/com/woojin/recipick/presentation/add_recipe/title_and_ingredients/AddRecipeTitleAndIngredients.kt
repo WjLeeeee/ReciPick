@@ -166,7 +166,7 @@ fun AddRecipeTitleAndIngredients(
             // 현재 선택된 양 표시
             if (quantityTotal.numerator > 0) {
                 Text(
-                    text = "현재: ${quantityTotal}$selectedUnit",
+                    text = "현재: ${quantityTotal.toMixedFractionString()}$selectedUnit",
                     fontWeight = FontWeight.Bold
                 )
             }

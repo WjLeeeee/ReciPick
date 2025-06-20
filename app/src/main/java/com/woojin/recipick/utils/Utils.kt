@@ -17,7 +17,7 @@ object Utils {
     }
 
     /** 통분된 분수 약분 */
-    private fun simplifyFraction(fraction: Fraction): Fraction {
+    fun simplifyFraction(fraction: Fraction): Fraction {
         if (fraction.numerator == 0) return Fraction(0, 1) // 분자가 0이면 0 반환
         val commonDivisor = gcd(fraction.numerator.let { kotlin.math.abs(it) }, fraction.denominator.let { kotlin.math.abs(it) })
         var num = fraction.numerator / commonDivisor
