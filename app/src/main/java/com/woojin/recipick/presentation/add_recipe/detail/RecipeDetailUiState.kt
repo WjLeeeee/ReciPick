@@ -10,4 +10,6 @@ data class RecipeDetailUiState(
     val editSteps: List<String> = recipeEntity.steps,
     val showDeleteIngredientDialog: Boolean = false, // 재료 삭제 dialog 표시 여부
     val deleteIngredientIndex: Int = -1, // 삭제 재료 인덱스 저장
+    val showDeleteStepDialog: Boolean = false, // 조리 과정 삭제 dialog 표시 여부
+    val deleteStepIndex: Int = -1, // 조리 과정 삭제 인덱스 저장
 )

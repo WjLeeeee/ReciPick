@@ -149,4 +149,20 @@ class RecipeDetailViewModel @Inject constructor(
             }
         }
     }
+
+    /** 조리 과정 삭제 확인 Dialog 관련 값 update */
+    fun updateDeleteStepDialog(
+        pair: Pair<Boolean, Int>
+    ) {
+        val deleteDialogValue = pair.first
+        val deleteIndex = pair.second
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    showDeleteStepDialog = deleteDialogValue,
+                    deleteStepIndex = deleteIndex
+                )
+            }
+        }
+    }
 }

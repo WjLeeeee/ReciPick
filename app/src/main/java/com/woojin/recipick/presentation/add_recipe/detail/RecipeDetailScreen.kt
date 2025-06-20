@@ -75,7 +75,10 @@ fun RecipeDetailScreen(
         updateEditSteps = { recipeDetailViewModel.updateEditSteps(it) },
         deleteIngredientDialog = recipeDetailData.showDeleteIngredientDialog,
         deleteIngredientIndex = recipeDetailData.deleteIngredientIndex,
-        updateDeleteIngredient = { recipeDetailViewModel.updateDeleteIngredientDialog(it) }
+        updateDeleteIngredient = { recipeDetailViewModel.updateDeleteIngredientDialog(it) },
+        deleteStepDialog = recipeDetailData.showDeleteStepDialog,
+        deleteStepIndex = recipeDetailData.deleteStepIndex,
+        updateDeleteStep = { recipeDetailViewModel.updateDeleteStepDialog(it) },
     )
 }
 
@@ -96,14 +99,11 @@ fun RecipeDetail(
     updateEditSteps: (List<String>) -> Unit,
     deleteIngredientDialog: Boolean,
     deleteIngredientIndex: Int,
-    updateDeleteIngredient: (Pair<Boolean, Int>) -> Unit
+    updateDeleteIngredient: (Pair<Boolean, Int>) -> Unit,
+    deleteStepDialog: Boolean,
+    deleteStepIndex: Int,
+    updateDeleteStep: (Pair<Boolean, Int>) -> Unit
 ) {
-
-    var showDeleteStepsDialog by remember { mutableStateOf(false) } // 단계 삭제 dialog 표시 여부
-
-    var deleteStepsIndex by remember { mutableIntStateOf(-1) } // 삭제 단계 인덱스 저장
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -263,10 +263,7 @@ fun RecipeDetail(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                onClick = {
-                                    showDeleteStepsDialog = true
-                                    deleteStepsIndex = index
-                                }
+                                onClick = { updateDeleteStep(Pair(true, index)) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -329,15 +326,12 @@ fun RecipeDetail(
                     )
                 }
 
-                showDeleteStepsDialog && deleteStepsIndex !=  -1 -> {
+                deleteStepDialog && deleteStepIndex !=  -1 -> {
                     AlertNoTitleFunc(
-                        onDismissRequest = {
-                            showDeleteStepsDialog = false
-                        },
+                        onDismissRequest = { updateDeleteStep(Pair(false, -1)) },
                         onConfirmation = {
-                            deleteStep(deleteStepsIndex)
-                            deleteStepsIndex = -1
-                            showDeleteStepsDialog = false
+                            deleteStep(deleteStepIndex)
+                            updateDeleteStep(Pair(false, -1))
                         },
                         dialogText = R.string.check_delete_item
                     )
@@ -369,7 +363,10 @@ fun RecipeDetailPreview() {
             updateEditSteps = {},
             deleteIngredientDialog = false,
             deleteIngredientIndex = -1,
-            updateDeleteIngredient = {}
+            updateDeleteIngredient = {},
+            deleteStepDialog = false,
+            deleteStepIndex = -1,
+            updateDeleteStep = {}
         )
     }
 }
