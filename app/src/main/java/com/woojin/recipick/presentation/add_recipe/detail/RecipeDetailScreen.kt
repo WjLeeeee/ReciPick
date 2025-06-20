@@ -198,7 +198,6 @@ fun RecipeDetail(
                                     newList[index] = newValue
                                     updateEditIngredients(newList)
                                 },
-                                label = { Text("${stringResource(R.string.ingredient_label)} ${index + 1}") },
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -280,7 +279,6 @@ fun RecipeDetail(
                                     newList[index] = newValue
                                     updateEditSteps(newList)
                                 },
-                                label = { Text("${stringResource(R.string.step_label)} ${index + 1}") },
                                 modifier = Modifier.weight(1f)
                             )
                         }
