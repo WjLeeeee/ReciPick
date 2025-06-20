@@ -65,7 +65,9 @@ fun RecipeDetailScreen(
         },
         deleteSteps = { index ->
             recipeDetailViewModel.deleteSteps(index = index)
-        }
+        },
+        isEditMode = recipeDetailData.isEditMode,
+        updateEditMode = { recipeDetailViewModel.updateEditMode(it) }
     )
 }
 
@@ -76,8 +78,9 @@ fun RecipeDetail(
     saveRecipeBtn: (RecipeEntity) -> Unit,
     deleteIngredient: (Int) -> Unit,
     deleteSteps: (Int) -> Unit,
+    isEditMode: Boolean,
+    updateEditMode: (Boolean) -> Unit,
 ) {
-    var isEditMode by remember { mutableStateOf(false) }
     var editTitle by remember(
         recipeDetailUiState.recipeEntity.title,
         isEditMode
@@ -112,7 +115,7 @@ fun RecipeDetail(
                 title = stringResource(R.string.recipe_detail_title),
                 true,
                 onBackClick = {
-                    isEditMode = false
+                    updateEditMode(false)
                     navController.popBackStack()
                 }
             )
@@ -120,12 +123,12 @@ fun RecipeDetail(
         floatingActionButton = {
             FloatingButton(
                 onClick = {
-                    isEditMode = !isEditMode
-                    if (!isEditMode) {
+                    if (isEditMode) {
                         saveRecipeBtn(
                             RecipeEntity(recipeDetailUiState.recipeEntity.id, editTitle, editIngredients, editSteps)
                         )
                     }
+                    updateEditMode(!isEditMode)
                 },
                 iconString = if (isEditMode) "save" else "edit"
             )
@@ -365,7 +368,9 @@ fun RecipeDetailPreview() {
             ),
             saveRecipeBtn = {},
             deleteIngredient = { _ -> },
-            deleteSteps = { _ -> }
+            deleteSteps = { _ -> },
+            isEditMode = true,
+            updateEditMode = {}
         )
     }
 }

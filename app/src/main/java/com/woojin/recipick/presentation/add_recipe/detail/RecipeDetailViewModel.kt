@@ -92,4 +92,15 @@ class RecipeDetailViewModel @Inject constructor(
             }
         }
     }
+
+    /** TopAppBar 뒤로 가기 클릭 시 editMode false 설정 */
+    fun updateEditMode(mode: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isEditMode = mode
+                )
+            }
+        }
+    }
 }
