@@ -24,7 +24,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -73,7 +72,10 @@ fun RecipeDetailScreen(
         editIngredients = recipeDetailData.editIngredients,
         updateEditIngredients = { recipeDetailViewModel.updateEditIngredients(it) },
         editSteps = recipeDetailData.editSteps,
-        updateEditSteps = { recipeDetailViewModel.updateEditSteps(it) }
+        updateEditSteps = { recipeDetailViewModel.updateEditSteps(it) },
+        deleteIngredientDialog = recipeDetailData.showDeleteIngredientDialog,
+        deleteIngredientIndex = recipeDetailData.deleteIngredientIndex,
+        updateDeleteIngredient = { recipeDetailViewModel.updateDeleteIngredientDialog(it) }
     )
 }
 
@@ -91,13 +93,14 @@ fun RecipeDetail(
     editIngredients: List<String>,
     updateEditIngredients: (List<String>) -> Unit,
     editSteps: List<String>,
-    updateEditSteps: (List<String>) -> Unit
+    updateEditSteps: (List<String>) -> Unit,
+    deleteIngredientDialog: Boolean,
+    deleteIngredientIndex: Int,
+    updateDeleteIngredient: (Pair<Boolean, Int>) -> Unit
 ) {
 
-    var showDeleteIngredientDialog by remember { mutableStateOf(false) } //재료 삭제 dialog 표시 여부
     var showDeleteStepsDialog by remember { mutableStateOf(false) } // 단계 삭제 dialog 표시 여부
 
-    var deleteIngredientIndex by remember { mutableIntStateOf(-1) } // 삭제 재료 인덱스 저장
     var deleteStepsIndex by remember { mutableIntStateOf(-1) } // 삭제 단계 인덱스 저장
 
 
@@ -178,10 +181,7 @@ fun RecipeDetail(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                onClick = {
-                                    deleteIngredientIndex = index
-                                    showDeleteIngredientDialog = true
-                                }
+                                onClick = { updateDeleteIngredient(Pair(true, index)) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -318,15 +318,12 @@ fun RecipeDetail(
             }
 
             when {
-                showDeleteIngredientDialog && deleteIngredientIndex != -1 -> {
+                deleteIngredientDialog && deleteIngredientIndex != -1 -> {
                     AlertNoTitleFunc(
-                        onDismissRequest = {
-                            showDeleteIngredientDialog = false
-                        },
+                        onDismissRequest = { updateDeleteIngredient(Pair(false, -1)) },
                         onConfirmation = {
                             deleteIngredient(deleteIngredientIndex)
-                            deleteIngredientIndex = -1
-                            showDeleteIngredientDialog = false
+                            updateDeleteIngredient(Pair(false, -1))
                         },
                         dialogText = R.string.check_delete_item
                     )
@@ -369,7 +366,10 @@ fun RecipeDetailPreview() {
             editIngredients = listOf("양파1개 수정중이지롱", "대파1개"),
             updateEditIngredients = {},
             editSteps = listOf("재료넣고 수정하자 수정수정", "볶기"),
-            updateEditSteps = {}
+            updateEditSteps = {},
+            deleteIngredientDialog = false,
+            deleteIngredientIndex = -1,
+            updateDeleteIngredient = {}
         )
     }
 }

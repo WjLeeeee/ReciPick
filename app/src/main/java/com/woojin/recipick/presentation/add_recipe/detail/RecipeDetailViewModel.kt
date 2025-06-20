@@ -2,7 +2,6 @@ package com.woojin.recipick.presentation.add_recipe.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woojin.recipick.data.local.dao.RecipeDao
 import com.woojin.recipick.data.local.entity.RecipeEntity
 import com.woojin.recipick.domain.usecase.DeleteIngredientUseCase
 import com.woojin.recipick.domain.usecase.DeleteStepUseCase
@@ -130,6 +129,22 @@ class RecipeDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     editSteps = updateSteps
+                )
+            }
+        }
+    }
+
+    /** 재료 삭제 확인 Dialog 관련 값 update */
+    fun updateDeleteIngredientDialog(
+        pair: Pair<Boolean, Int>
+    ) {
+        val deleteDialogValue = pair.first
+        val deleteIndex = pair.second
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    showDeleteIngredientDialog = deleteDialogValue,
+                    deleteIngredientIndex = deleteIndex
                 )
             }
         }
