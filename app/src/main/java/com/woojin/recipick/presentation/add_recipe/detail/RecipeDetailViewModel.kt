@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woojin.recipick.data.local.dao.RecipeDao
 import com.woojin.recipick.data.local.entity.RecipeEntity
+import com.woojin.recipick.domain.usecase.GetRecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
+    private val getRecipeUseCase: GetRecipeUseCase,
     private val recipeDao: RecipeDao
 ) : ViewModel() {
 
@@ -24,15 +26,14 @@ class RecipeDetailViewModel @Inject constructor(
     fun recipeDetail(recipeId: Int?) {
         viewModelScope.launch {
             recipeId?.let { id ->
-                recipeDao.getRecipe(id).let { data ->
-                    _uiState.update {
-                        it.copy(
-                            recipeEntity = data,
-                            editTitle = data.title,
-                            editIngredients = data.ingredients,
-                            editSteps = data.steps
-                        )
-                    }
+                val data = getRecipeUseCase(id)
+                _uiState.update {
+                    it.copy(
+                        recipeEntity = data,
+                        editTitle = data.title,
+                        editIngredients = data.ingredients,
+                        editSteps = data.steps
+                    )
                 }
             }
         }
