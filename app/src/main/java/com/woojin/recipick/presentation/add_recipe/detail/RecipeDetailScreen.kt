@@ -47,19 +47,11 @@ fun RecipeDetailScreen(
         deleteStep = { index ->
             recipeDetailViewModel.deleteStep(index = index)
         },
-        isEditMode = recipeDetailData.isEditMode,
         updateEditMode = { recipeDetailViewModel.updateEditMode(it) },
-        editTitle = recipeDetailData.editTitle,
         updateEditTitle = { recipeDetailViewModel.updateEditTitle(it) },
-        editIngredients = recipeDetailData.editIngredients,
         updateEditIngredients = { recipeDetailViewModel.updateEditIngredients(it) },
-        editSteps = recipeDetailData.editSteps,
         updateEditSteps = { recipeDetailViewModel.updateEditSteps(it) },
-        deleteIngredientDialog = recipeDetailData.showDeleteIngredientDialog,
-        deleteIngredientIndex = recipeDetailData.deleteIngredientIndex,
         updateDeleteIngredientDialog = { recipeDetailViewModel.updateDeleteIngredientDialog(it) },
-        deleteStepDialog = recipeDetailData.showDeleteStepDialog,
-        deleteStepIndex = recipeDetailData.deleteStepIndex,
         updateDeleteStepDialog = { recipeDetailViewModel.updateDeleteStepDialog(it) },
     )
 }
@@ -71,19 +63,11 @@ fun RecipeDetail(
     saveRecipeBtn: (RecipeEntity) -> Unit,
     deleteIngredient: (Int) -> Unit,
     deleteStep: (Int) -> Unit,
-    isEditMode: Boolean,
     updateEditMode: (Boolean) -> Unit,
-    editTitle: String,
     updateEditTitle: (String) -> Unit,
-    editIngredients: List<String>,
     updateEditIngredients: (List<String>) -> Unit,
-    editSteps: List<String>,
     updateEditSteps: (List<String>) -> Unit,
-    deleteIngredientDialog: Boolean,
-    deleteIngredientIndex: Int,
     updateDeleteIngredientDialog: (Pair<Boolean, Int>) -> Unit,
-    deleteStepDialog: Boolean,
-    deleteStepIndex: Int,
     updateDeleteStepDialog: (Pair<Boolean, Int>) -> Unit
 ) {
     Scaffold(
@@ -101,19 +85,19 @@ fun RecipeDetail(
         floatingActionButton = {
             FloatingButton(
                 onClick = {
-                    if (isEditMode) {
+                    if (recipeDetailUiState.isEditMode) {
                         saveRecipeBtn(
                             RecipeEntity(
                                 recipeDetailUiState.recipeEntity.id,
-                                editTitle,
-                                editIngredients,
-                                editSteps
+                                recipeDetailUiState.editTitle,
+                                recipeDetailUiState.editIngredients,
+                                recipeDetailUiState.editSteps
                             )
                         )
                     }
-                    updateEditMode(!isEditMode)
+                    updateEditMode(!recipeDetailUiState.isEditMode)
                 },
-                iconString = if (isEditMode) "save" else "edit"
+                iconString = if (recipeDetailUiState.isEditMode) "save" else "edit"
             )
         }
     ) { innerPadding ->
@@ -131,9 +115,9 @@ fun RecipeDetail(
             ) {
                 // 레시피 제목
                 item {
-                    if (isEditMode) {
+                    if (recipeDetailUiState.isEditMode) {
                         OutlinedTextField(
-                            value = editTitle,
+                            value = recipeDetailUiState.editTitle,
                             onValueChange = { updateEditTitle(it) },
                             label = { Text(stringResource(R.string.recipe_title_edit_text)) },
                             singleLine = true,
@@ -152,18 +136,18 @@ fun RecipeDetail(
                 item {
                     RecipeDetailListItem(
                         titleResID = R.string.ingredients_section_title,
-                        isEditMode = isEditMode,
-                        items = editSteps,
+                        isEditMode = recipeDetailUiState.isEditMode,
+                        items = recipeDetailUiState.editIngredients,
                         updateDeleteItemDialog = { index ->
-                            updateDeleteStepDialog(Pair(true, index))
+                            updateDeleteIngredientDialog(Pair(true, index))
                         },
-                        updateEditItems = { updateEditSteps(it) },
+                        updateEditItems = { updateEditIngredients(it) },
                         onAddItem = {
-                            val newList = editSteps.toMutableList()
+                            val newList = recipeDetailUiState.editIngredients.toMutableList()
                             newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
-                            updateEditSteps(newList)
+                            updateEditIngredients(newList)
                         },
-                        addButtonTextResId = R.string.add_recipe_step_button,
+                        addButtonTextResId = R.string.add_recipe,
                         emptyListMessageResId = R.string.no_ingredients_message,
                     )
                 }
@@ -174,40 +158,40 @@ fun RecipeDetail(
                 item {
                     RecipeDetailListItem(
                         titleResID = R.string.steps_section_title,
-                        isEditMode = isEditMode,
-                        items = editIngredients,
+                        isEditMode = recipeDetailUiState.isEditMode,
+                        items = recipeDetailUiState.editSteps,
                         updateDeleteItemDialog = { index ->
-                            updateDeleteIngredientDialog(Pair(true, index))
+                            updateDeleteStepDialog(Pair(true, index))
                         },
-                        updateEditItems = { updateEditIngredients(it) },
+                        updateEditItems = { updateEditSteps(it) },
                         onAddItem = {
-                            val newList = editIngredients.toMutableList()
+                            val newList = recipeDetailUiState.editSteps.toMutableList()
                             newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
-                            updateEditIngredients(newList)
+                            updateEditSteps(newList)
                         },
-                        addButtonTextResId = R.string.add_recipe,
+                        addButtonTextResId = R.string.add_recipe_step_button,
                         emptyListMessageResId = R.string.no_steps_message,
                     )
                 }
             }
 
             when {
-                deleteIngredientDialog && deleteIngredientIndex != -1 -> {
+                recipeDetailUiState.showDeleteIngredientDialog && recipeDetailUiState.deleteIngredientIndex != -1 -> {
                     AlertNoTitleFunc(
                         onDismissRequest = { updateDeleteIngredientDialog(Pair(false, -1)) },
                         onConfirmation = {
-                            deleteIngredient(deleteIngredientIndex)
+                            deleteIngredient(recipeDetailUiState.deleteIngredientIndex)
                             updateDeleteIngredientDialog(Pair(false, -1))
                         },
                         dialogText = R.string.check_delete_item
                     )
                 }
 
-                deleteStepDialog && deleteStepIndex != -1 -> {
+                recipeDetailUiState.showDeleteStepDialog && recipeDetailUiState.deleteStepIndex != -1 -> {
                     AlertNoTitleFunc(
                         onDismissRequest = { updateDeleteStepDialog(Pair(false, -1)) },
                         onConfirmation = {
-                            deleteStep(deleteStepIndex)
+                            deleteStep(recipeDetailUiState.deleteStepIndex)
                             updateDeleteStepDialog(Pair(false, -1))
                         },
                         dialogText = R.string.check_delete_item
@@ -230,24 +214,17 @@ fun RecipeDetailPreview() {
                     "레시피제목",
                     listOf("양파1개", "대파1개"),
                     listOf("재료넣고", "볶기")
-                )
+                ),
+                isEditMode = true
             ),
             saveRecipeBtn = {},
             deleteIngredient = { _ -> },
             deleteStep = { _ -> },
-            isEditMode = true,
             updateEditMode = {},
-            editTitle = "레시피 제목 수정중",
             updateEditTitle = {},
-            editIngredients = listOf("양파1개 수정중이지롱", "대파1개"),
             updateEditIngredients = {},
-            editSteps = listOf("재료넣고 수정하자 수정수정", "볶기"),
             updateEditSteps = {},
-            deleteIngredientDialog = false,
-            deleteIngredientIndex = -1,
             updateDeleteIngredientDialog = {},
-            deleteStepDialog = false,
-            deleteStepIndex = -1,
             updateDeleteStepDialog = {}
         )
     }
