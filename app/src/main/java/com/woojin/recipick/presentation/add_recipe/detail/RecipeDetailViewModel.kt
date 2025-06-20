@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.woojin.recipick.data.local.dao.RecipeDao
 import com.woojin.recipick.data.local.entity.RecipeEntity
 import com.woojin.recipick.domain.usecase.DeleteIngredientUseCase
+import com.woojin.recipick.domain.usecase.DeleteStepUseCase
 import com.woojin.recipick.domain.usecase.GetRecipeUseCase
 import com.woojin.recipick.domain.usecase.UpdateRecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ class RecipeDetailViewModel @Inject constructor(
     private val getRecipeUseCase: GetRecipeUseCase,
     private val updateRecipeUseCase: UpdateRecipeUseCase,
     private val deleteIngredientUseCase: DeleteIngredientUseCase,
+    private val deleteStepUseCase: DeleteStepUseCase,
     private val recipeDao: RecipeDao
 ) : ViewModel() {
 
@@ -77,23 +79,15 @@ class RecipeDetailViewModel @Inject constructor(
     /** 레시피 수정 중 조리 과정 삭제 */
     fun deleteSteps(index: Int) {
         viewModelScope.launch {
-            val currentRecipeSteps = _uiState.value.recipeEntity
-            //index 가 정상 인지, 리스트 크기 보다 크지 않은지 확인
-            if (index >= 0 && index < currentRecipeSteps.steps.size) {
-                //현재 재료 리스트 에서 해당 index 재료 제거 후 저장
-                val updatedSteps = currentRecipeSteps.steps.toMutableList()
-                updatedSteps.removeAt(index)
-                val newRecipeData = currentRecipeSteps.copy(
-                    steps = updatedSteps.toList()
+            val afterDeleteData = deleteStepUseCase(
+                index = index,
+                data = _uiState.value.recipeEntity
+            )
+            _uiState.update {
+                it.copy(
+                    recipeEntity = afterDeleteData,
+                    editSteps = afterDeleteData.steps
                 )
-                //새롭게 저장된 리스트 적용
-                _uiState.update {
-                    it.copy(
-                        recipeEntity = newRecipeData,
-                        editSteps = newRecipeData.steps
-                    )
-                }
-                recipeDao.updateRecipe(newRecipeData)
             }
         }
     }
