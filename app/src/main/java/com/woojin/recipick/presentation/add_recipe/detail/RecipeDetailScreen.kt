@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -36,7 +37,11 @@ fun RecipeDetailScreen(
     recipeId: Int,
 ) {
     val recipeDetailViewModel: RecipeDetailViewModel = hiltViewModel()
-    recipeDetailViewModel.recipeDetail(recipeId)
+    LaunchedEffect(key1 = recipeId) {
+        if (recipeId != 0) {
+            recipeDetailViewModel.recipeDetail(recipeId)
+        }
+    }
     val recipeDetailData by recipeDetailViewModel.uiState.collectAsState()
     RecipeDetail(
         navController = navController,
