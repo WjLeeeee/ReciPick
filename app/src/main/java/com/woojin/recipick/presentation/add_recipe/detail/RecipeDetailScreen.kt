@@ -1,36 +1,18 @@
 package com.woojin.recipick.presentation.add_recipe.detail
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -121,7 +103,12 @@ fun RecipeDetail(
                 onClick = {
                     if (isEditMode) {
                         saveRecipeBtn(
-                            RecipeEntity(recipeDetailUiState.recipeEntity.id, editTitle, editIngredients, editSteps)
+                            RecipeEntity(
+                                recipeDetailUiState.recipeEntity.id,
+                                editTitle,
+                                editIngredients,
+                                editSteps
+                            )
                         )
                     }
                     updateEditMode(!isEditMode)
@@ -161,154 +148,46 @@ fun RecipeDetail(
                     }
                 }
 
-                // 재료 섹션 제목
+                // 재료 아이템
                 item {
-                    Text(
-                        text = stringResource(R.string.ingredients_section_title),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                    RecipeDetailListItem(
+                        titleResID = R.string.ingredients_section_title,
+                        isEditMode = isEditMode,
+                        items = editSteps,
+                        updateDeleteItemDialog = { index ->
+                            updateDeleteStepDialog(Pair(true, index))
+                        },
+                        updateEditItems = { updateEditSteps(it) },
+                        onAddItem = {
+                            val newList = editSteps.toMutableList()
+                            newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
+                            updateEditSteps(newList)
+                        },
+                        addButtonTextResId = R.string.add_recipe_step_button,
+                        emptyListMessageResId = R.string.no_ingredients_message,
                     )
                 }
 
-                //재료 목록 수정
-                if (isEditMode) {
-                    itemsIndexed(editIngredients) { index, ingredient ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(
-                                onClick = { updateDeleteIngredientDialog(Pair(true, index)) }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = "삭제 아이콘",
-                                    modifier = Modifier
-                                        .padding(end = 8.dp)
-                                        .size(20.dp),
-                                )
-                            }
-                            TextField(
-                                value = ingredient,
-                                onValueChange = { newValue ->
-                                    val newList = editIngredients.toMutableList()
-                                    newList[index] = newValue
-                                    updateEditIngredients(newList)
-                                },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    item {
-                        // 재료 추가 버튼
-                        OutlinedButton(
-                            onClick = {
-                                val newList = editIngredients.toMutableList()
-                                newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
-                                updateEditIngredients(newList)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "추가 버튼")
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(stringResource(R.string.add_recipe))
-                        }
-                    }
-                } else {
-                    if (recipeDetailUiState.recipeEntity.ingredients.isNotEmpty()) {
-                        items(recipeDetailUiState.recipeEntity.ingredients) { ingredient ->
-                            Text(
-                                text = "- $ingredient",
-                                fontSize = 16.sp,
-                                modifier = Modifier.padding(bottom = 4.dp, start = 8.dp)
-                            )
-                        }
-                    } else {
-                        item {
-                            Text(
-                                text = stringResource(R.string.no_ingredients_message),
-                                fontSize = 16.sp,
-                                modifier = Modifier.padding(bottom = 4.dp, start = 8.dp)
-                            )
-                        }
-                    }
-                }
+                item { Spacer(modifier = Modifier.height(24.dp)) }
 
-                // 간격
+                // 조리 단계 아이템
                 item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                // 조리 단계 섹션 제목
-                item {
-                    Text(
-                        text = stringResource(R.string.steps_section_title), // "조리 단계"
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                    RecipeDetailListItem(
+                        titleResID = R.string.steps_section_title,
+                        isEditMode = isEditMode,
+                        items = editIngredients,
+                        updateDeleteItemDialog = { index ->
+                            updateDeleteIngredientDialog(Pair(true, index))
+                        },
+                        updateEditItems = { updateEditIngredients(it) },
+                        onAddItem = {
+                            val newList = editIngredients.toMutableList()
+                            newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
+                            updateEditIngredients(newList)
+                        },
+                        addButtonTextResId = R.string.add_recipe,
+                        emptyListMessageResId = R.string.no_steps_message,
                     )
-                }
-
-                if (isEditMode) {
-                    //조리 단계 수정
-                    itemsIndexed(editSteps) { index, step ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(
-                                onClick = { updateDeleteStepDialog(Pair(true, index)) }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = "삭제 아이콘",
-                                    modifier = Modifier
-                                        .padding(end = 8.dp)
-                                        .size(20.dp),
-                                )
-                            }
-                            TextField(
-                                value = step,
-                                onValueChange = { newValue ->
-                                    val newList = editSteps.toMutableList()
-                                    newList[index] = newValue
-                                    updateEditSteps(newList)
-                                },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    item {
-                        // 조리 과정 추가 버튼
-                        OutlinedButton(
-                            onClick = {
-                                val newList = editSteps.toMutableList()
-                                newList.add("") // 빈 문자열 추가 또는 "새 재료" 등 기본값
-                                updateEditSteps(newList)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "추가 버튼")
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(stringResource(R.string.add_recipe_step_button))
-                        }
-                    }
-                } else {
-                    // 조리 단계 목록
-                    if (recipeDetailUiState.recipeEntity.steps.isNotEmpty()) {
-                        items(recipeDetailUiState.recipeEntity.steps.size) { index -> // 단계 번호와 함께 표시
-                            Text(
-                                text = "${index + 1}. ${recipeDetailUiState.recipeEntity.steps[index]}",
-                                fontSize = 16.sp,
-                                modifier = Modifier.padding(bottom = 4.dp, start = 8.dp)
-                            )
-                        }
-                    }
                 }
             }
 
@@ -324,7 +203,7 @@ fun RecipeDetail(
                     )
                 }
 
-                deleteStepDialog && deleteStepIndex !=  -1 -> {
+                deleteStepDialog && deleteStepIndex != -1 -> {
                     AlertNoTitleFunc(
                         onDismissRequest = { updateDeleteStepDialog(Pair(false, -1)) },
                         onConfirmation = {
@@ -346,7 +225,12 @@ fun RecipeDetailPreview() {
         RecipeDetail(
             navController = rememberNavController(),
             recipeDetailUiState = RecipeDetailUiState(
-                recipeEntity = RecipeEntity(1, "레시피제목", listOf("양파1개", "대파1개"), listOf("재료넣고", "볶기"))
+                recipeEntity = RecipeEntity(
+                    1,
+                    "레시피제목",
+                    listOf("양파1개", "대파1개"),
+                    listOf("재료넣고", "볶기")
+                )
             ),
             saveRecipeBtn = {},
             deleteIngredient = { _ -> },

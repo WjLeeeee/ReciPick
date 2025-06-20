@@ -29,6 +29,7 @@
     <string name="recipe_title_edit_text">레시피 제목 수정</string>
     <string name="ingredients_section_title">필요한 재료</string>
     <string name="no_ingredients_message">저장된 재료가 없습니다.</string>
+    <string name="no_steps_message">저장된 조리 과정이 없습니다.</string>
     <string name="steps_section_title">조리 단계</string>
 
     <!--  Alert Dialog  -->
