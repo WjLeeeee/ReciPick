@@ -68,7 +68,8 @@ class RecipeDetailViewModel @Inject constructor(
                 //새롭게 저장된 리스트 적용
                 _uiState.update {
                     it.copy(
-                        recipeEntity = newRecipeData
+                        recipeEntity = newRecipeData,
+                        editIngredients = newRecipeData.ingredients
                     )
                 }
                 recipeDao.updateRecipe(newRecipeData)
@@ -91,7 +92,8 @@ class RecipeDetailViewModel @Inject constructor(
                 //새롭게 저장된 리스트 적용
                 _uiState.update {
                     it.copy(
-                        recipeEntity = newRecipeData
+                        recipeEntity = newRecipeData,
+                        editSteps = newRecipeData.steps
                     )
                 }
                 recipeDao.updateRecipe(newRecipeData)
