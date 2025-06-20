@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.woojin.recipick.R
@@ -32,8 +33,10 @@ import com.woojin.recipick.presentation.theme.RecipickTheme
 @Composable
 fun RecipeDetailScreen(
     navController: NavHostController,
-    recipeDetailViewModel: RecipeDetailViewModel
+    recipeId: Int,
 ) {
+    val recipeDetailViewModel: RecipeDetailViewModel = hiltViewModel()
+    recipeDetailViewModel.recipeDetail(recipeId)
     val recipeDetailData by recipeDetailViewModel.uiState.collectAsState()
     RecipeDetail(
         navController = navController,
