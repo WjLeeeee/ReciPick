@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.woojin.recipick.data.local.dao.RecipeDao
 import com.woojin.recipick.data.local.entity.RecipeEntity
 import com.woojin.recipick.domain.usecase.GetRecipeUseCase
+import com.woojin.recipick.domain.usecase.UpdateRecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val getRecipeUseCase: GetRecipeUseCase,
+    private val updateRecipeUseCase: UpdateRecipeUseCase,
     private val recipeDao: RecipeDao
 ) : ViewModel() {
 
@@ -42,7 +44,7 @@ class RecipeDetailViewModel @Inject constructor(
     /** 수정된 레시피 저장 */
     fun updateRecipe(data: RecipeEntity) {
         viewModelScope.launch {
-            recipeDao.updateRecipe(data)
+            updateRecipeUseCase(data)
             _uiState.update {
                 it.copy(
                     recipeEntity = data,

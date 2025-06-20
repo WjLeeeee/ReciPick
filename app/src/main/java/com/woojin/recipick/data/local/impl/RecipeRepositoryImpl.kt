@@ -13,4 +13,10 @@ class RecipeRepositoryImpl @Inject constructor(
     ): RecipeEntity {
         return recipeDao.getRecipe(recipeId)
     }
+
+    override suspend fun updateRecipe(
+        data: RecipeEntity
+    ) {
+        recipeDao.updateRecipe(data)
+    }
 }
