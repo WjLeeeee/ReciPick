@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1079056305605",
+    "project_id": "recipick-2adc9",
+    "storage_bucket": "recipick-2adc9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079056305605:android:2f411e2ef28b9b2e25cfac",
+        "android_client_info": {
+          "package_name": "com.woojin.recipick"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079056305605-763rd3t1i69fkup5gds74sstjko60h8c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.woojin.recipick",
+            "certificate_hash": "db9c766329fa127060ff1597904193cec505a904"
+          }
+        },
+        {
+          "client_id": "1079056305605-k8u3loj2v0kdq728hsijlc5cq7nlhq0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAovBpDMy9g76qdVIkSMNRFCHESTiGiQe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079056305605-k8u3loj2v0kdq728hsijlc5cq7nlhq0t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
