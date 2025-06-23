@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -66,4 +68,29 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //viewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") //hiltViewModel 델리게이트 사용을 위한 추가
+
+    //네비게이션
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    //Room
+    val roomVersion = "2.4.2"
+    implementation("androidx.room:room-runtime:$roomVersion") //기본
+    ksp("androidx.room:room-compiler:$roomVersion") //또는 kapt
+    implementation("androidx.room:room-ktx:$roomVersion") //Flow지원을 위해서
+
+    //Coroutines
+    val coroutineVersion = "1.7.3"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
+
+    //GSON
+    implementation("com.google.code.gson:gson:2.10.1")
 }
