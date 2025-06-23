@@ -31,6 +31,9 @@
     <string name="no_ingredients_message">저장된 재료가 없습니다.</string>
     <string name="no_steps_message">저장된 조리 과정이 없습니다.</string>
     <string name="steps_section_title">조리 단계</string>
+    <string name="please_input_title">제목을 입력해 주세요</string>
+    <string name="please_input_ingredient">재료를 입력해 주세요</string>
+    <string name="please_input_step">조리 과정을 입력해 주세요</string>
 
     <!--  Alert Dialog  -->
     <string name="ok">확인</string>

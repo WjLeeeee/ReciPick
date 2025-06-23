@@ -1,5 +1,6 @@
 package com.woojin.recipick.presentation.add_recipe.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,6 +80,7 @@ fun RecipeDetail(
     updateDeleteIngredientDialog: (Pair<Boolean, Int>) -> Unit,
     updateDeleteStepDialog: (Pair<Boolean, Int>) -> Unit
 ) {
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -93,17 +96,27 @@ fun RecipeDetail(
         floatingActionButton = {
             FloatingButton(
                 onClick = {
-                    if (recipeDetailUiState.isEditMode) {
-                        saveRecipeBtn(
-                            RecipeEntity(
-                                recipeDetailUiState.recipeEntity.id,
-                                recipeDetailUiState.editTitle,
-                                recipeDetailUiState.editIngredients,
-                                recipeDetailUiState.editSteps
-                            )
-                        )
+                    val text = when {
+                        recipeDetailUiState.editTitle.isBlank() -> R.string.please_input_title
+                        recipeDetailUiState.editIngredients.any { it.isBlank() } -> R.string.please_input_ingredient
+                        recipeDetailUiState.editSteps.any { it.isBlank() } -> R.string.please_input_step
+                        else -> null
                     }
-                    updateEditMode(!recipeDetailUiState.isEditMode)
+                    if (text != null) {
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    } else {
+                        if (recipeDetailUiState.isEditMode) {
+                            saveRecipeBtn(
+                                RecipeEntity(
+                                    recipeDetailUiState.recipeEntity.id,
+                                    recipeDetailUiState.editTitle,
+                                    recipeDetailUiState.editIngredients,
+                                    recipeDetailUiState.editSteps
+                                )
+                            )
+                        }
+                        updateEditMode(!recipeDetailUiState.isEditMode)
+                    }
                 },
                 iconString = if (recipeDetailUiState.isEditMode) "save" else "edit"
             )
